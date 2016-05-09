@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class Language {
 
 	[SerializeField]
-	public string languageName;
+	public SystemLanguage languageName;
 
 	[SerializeField]
 	public List<string> keys = new List<string>();

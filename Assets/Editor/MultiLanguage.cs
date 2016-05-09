@@ -10,11 +10,10 @@ public class MultiLanguage : EditorWindow {
 	//the language database that is selected
 	public LanguageDatabase mLanguages;
 
-	//The current path 
-	public string mCurrentDataPath;
+	public bool isLoaded = false;
 
 	//currently editing Languages
-	public string mCurrentLanguage;
+	public SystemLanguage mCurrentLanguage;
 
 	//enum of the avaliable languages
 	public SystemLanguage mSystemLanguage;
@@ -23,7 +22,10 @@ public class MultiLanguage : EditorWindow {
 	//new language key and values to edit
 	private string m_NewLanguageKey, m_NewLanguageValue;
 
-	[MenuItem("Window/Multi-Language")]
+	private string[] loadedLanguageList;
+	private int currentLoadedLanguageListSelection;
+
+	[MenuItem("Window/Multi-Language %l")]
 	static void ShowEditor() {
 
 		//create the editor window
@@ -38,12 +40,17 @@ public class MultiLanguage : EditorWindow {
 	// Use this for initialization
 	public void Init() 
 	{
-		//get the directory we are in so we can make our paths relative
-		//Assetdatabase.LoadAsset requires a relative path
-		mCurrentDataPath = System.Environment.CurrentDirectory + "/";
+		DetectLanguageFileFromSelection();
 	}
 
+	public void OnEnable ()
+	{
 
+		Init ();
+		DetectLanguageFileFromSelection ();
+
+	}
+		
 	void OnGUI()
 	{
 
@@ -51,13 +58,24 @@ public class MultiLanguage : EditorWindow {
 		GUILayout.BeginArea(new Rect(0,0, Screen.width, Screen.height));
 
 		//check if the current language is loaded or not
-		if(mCurrentLanguage != null)
+		if(isLoaded == true)
 		{
 			//the menu that will always display on top
 			LanguageMenuBar();
 
-			//display the buttons and text boxes so you can add key and values
-			AddLanguageKeyValues();
+			if(mLanguages.database != null)
+			{
+				//display the buttons and text boxes so you can add key and values
+				AddLanguageKeyValues();
+
+				//display keys and values
+				LanguageKeyValueDisplay();
+			}
+			else
+			{
+				GUILayout.Label("Create A New Language");
+			}
+
 		}
 		else
 		{
@@ -70,17 +88,62 @@ public class MultiLanguage : EditorWindow {
 
 	}
 
+	private void LanguageKeyValueDisplay()
+	{
+		if(mLanguages.database[currentLoadedLanguageListSelection].keys.Count != 0)
+		{
+			for (int i = 0; i < mLanguages.database[currentLoadedLanguageListSelection].keys.Count; i++) 
+			{
+				GUILayout.Label("Key: " + mLanguages.database[currentLoadedLanguageListSelection].keys[i]
+					+ " | Value: " + mLanguages.database[currentLoadedLanguageListSelection].values[i]
+				);
+			}
+		}
+	}
+
+	private void LoadDatabase ()
+	{
+		if(mLanguages.database == null)
+		{
+			if(mLanguages.database[0] != null)
+			{
+				mCurrentLanguage = mLanguages.database[0].languageName;
+				//populate the list
+				populateLanguagesList();
+				Debug.Log("Database is not empty. Assigning mCurrentLanguage");
+			}
+		}
+		else
+		{
+			//Debug.Log("Database is Empty");
+		}
+	}
+
 	private void AddLanguageKeyValues ()
 	{
 
 		GUILayout.BeginHorizontal("HelpBox");
-		EditorGUILayout.TextField("Key: ", m_NewLanguageKey);
-		EditorGUILayout.TextField("Value: ", m_NewLanguageValue);
+		m_NewLanguageKey = EditorGUILayout.TextField("Key: ", m_NewLanguageKey);
+		m_NewLanguageValue = EditorGUILayout.TextField("Value: ", m_NewLanguageValue);
 
 		//add the language you have selected
 		if(GUILayout.Button("Add"))
 		{
-			Debug.Log("Adding: Key" + m_NewLanguageKey + " | Value: " + m_NewLanguageValue);
+			//check if a key already exists
+			if(mLanguages.database[currentLoadedLanguageListSelection].keys.Contains(m_NewLanguageKey.ToLower()))
+			{
+				//throw error to user if this key already exists
+				EditorUtility.DisplayDialog("Mult-Language Error", "The Key Already Exists", "Okay", "");
+			}
+			else
+			{
+				//key doesn't exist
+				//add the key and value to the language
+				mLanguages.database[currentLoadedLanguageListSelection].keys.Add(m_NewLanguageKey.ToLower());
+				mLanguages.database[currentLoadedLanguageListSelection].values.Add(m_NewLanguageValue);
+				//Debug.Log("Adding: Key" + m_NewLanguageKey + " | Value: " + m_NewLanguageValue);
+			}
+
 		}
 
 		GUILayout.EndHorizontal();
@@ -100,10 +163,93 @@ public class MultiLanguage : EditorWindow {
 		//add the language you have selected
 		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(20)))
 		{
-			Debug.Log("Add:" + mNewSystemLanguage.ToString());
+			Language _newLanguage = new Language();
+			_newLanguage.languageName = mNewSystemLanguage;
+
+			mLanguages.database.Add(_newLanguage);
+
+			//Debug.Log("Add:" + mNewSystemLanguage.ToString());
 		}
 
+		EditorGUILayout.Space();
+
+		populateLanguagesList();
+
+		//select the language you want to display
+		currentLoadedLanguageListSelection = EditorGUILayout.Popup(currentLoadedLanguageListSelection, loadedLanguageList, EditorStyles.toolbarPopup);
+		//Debug.Log(currentLoadedLanguageListSelection);
+
 		GUILayout.EndHorizontal();
+
+	}
+
+	public void populateLanguagesList()
+	{
+
+		if(mLanguages == null)
+		{
+			loadedLanguageList = new string[0];
+			return;
+		}
+
+		if(loadedLanguageList == null || mLanguages.database.Count != loadedLanguageList.Length) 
+		{
+			
+			//create a local list
+			List<string> languageList = new List<string>();
+
+			//add all the languages to the local list
+			for (int i = 0; i < mLanguages.database.Count; i++) 
+			{
+				languageList.Add(mLanguages.database[i].languageName.ToString());
+			}
+
+			//convert the list to an array and use it for our popupMenu
+			loadedLanguageList = languageList.ToArray();
+			//Debug.Log(loadedLanguageList);
+		}
+	}
+
+	public void DetectLanguageFileFromSelection ()
+	{
+		mLanguages = null;
+
+		if (Selection.activeObject == null && mLanguages == null)
+		{
+			mLanguages = null;
+		}
+		
+		if (Selection.activeObject is LanguageDatabase && EditorUtility.IsPersistent(Selection.activeObject))
+		{
+			mLanguages = Selection.activeObject as LanguageDatabase;
+			LoadDatabase();
+			isLoaded = true;
+			//Debug.Log("Language Asset Selected and Loading");
+		}
+
+	}
+
+	public void OnFocus ()
+	{
+		DetectLanguageFileFromSelection();
+	}
+
+
+	public void OnProjectChange ()
+	{
+		DetectLanguageFileFromSelection ();
+	}
+
+	public void OnSelectionChange ()
+	{
+
+		DetectLanguageFileFromSelection();
+		Repaint();
+
+	}
+
+	public void OnLostFocus () 
+	{
 
 	}
 
