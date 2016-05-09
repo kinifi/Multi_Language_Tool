@@ -163,6 +163,9 @@ public class MultiLanguage : EditorWindow {
 		//add the language you have selected
 		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(20)))
 		{
+
+			//check if language already exists
+
 			Language _newLanguage = new Language();
 			_newLanguage.languageName = mNewSystemLanguage;
 
@@ -212,12 +215,6 @@ public class MultiLanguage : EditorWindow {
 
 	public void DetectLanguageFileFromSelection ()
 	{
-		mLanguages = null;
-
-		if (Selection.activeObject == null && mLanguages == null)
-		{
-			mLanguages = null;
-		}
 		
 		if (Selection.activeObject is LanguageDatabase && EditorUtility.IsPersistent(Selection.activeObject))
 		{
@@ -251,6 +248,24 @@ public class MultiLanguage : EditorWindow {
 	public void OnLostFocus () 
 	{
 
+	}
+
+	private bool doesLanguageExist(SystemLanguage language)
+	{
+		for (int i = 0; i < mLanguages.database.Count; i++) 
+		{
+			if(mLanguages.database[i].languageName == language)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		return false;
+			
 	}
 
 }
