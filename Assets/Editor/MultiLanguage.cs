@@ -207,7 +207,7 @@ public class MultiLanguage : EditorWindow {
 
 	public void ExportLanguageFile ()
 	{
-		if(GUILayout.Button("Export Language", EditorStyles.toolbarButton))
+		if(GUILayout.Button("Export Language", EditorStyles.toolbarButton, GUILayout.Width(100)))
 		{
 			//start exporting language File here
 		}
@@ -216,7 +216,7 @@ public class MultiLanguage : EditorWindow {
 
 	public void ImportLanguageFile()
 	{
-		if(GUILayout.Button("Import Language", EditorStyles.toolbarButton))
+		if(GUILayout.Button("Import Language", EditorStyles.toolbarButton, GUILayout.Width(100)))
 		{
 			//start exporting language File here
 		}
