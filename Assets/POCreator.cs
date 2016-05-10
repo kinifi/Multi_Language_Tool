@@ -68,6 +68,11 @@ public class POCreator {
 	/// <param name="comment">Production Comment</param>
 	public static void POEntry(string key, string msgid, string msgstr, string comment = "")
 	{
+		//check if msgid has quotes
+		msgid.Replace("\"","\\\"");
+		msgstr.Replace("\"","\\\"");
+
+		//create entry
 		string newEntry = 
 		"# " + comment + "\n" +
 		"#: " + key + "\n" +
