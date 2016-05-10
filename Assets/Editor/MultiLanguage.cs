@@ -19,6 +19,10 @@ public class MultiLanguage : EditorWindow {
 	private SystemLanguage[] loadedLanguages;
 	private string[] loadedLanguagesString;
 
+	private Vector2 mScroll;
+
+	private string mTranslatedTextValue, mOriginTextValue;
+
 	[MenuItem("Window/Multi-Language %l")]
 	static void ShowEditor() {
 
@@ -73,15 +77,67 @@ public class MultiLanguage : EditorWindow {
 
 	private void LanguageKeyValueDisplay()
 	{
+
 		if(mLanguages != null) {
 			M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
+			
+			GUILayout.BeginHorizontal("HelpBox");
 
-			for(int i=0; i < mLanguages.keys.Count; ++i) {
-				GUILayout.Label("Key: " + mLanguages.keys[i]
-					+ " | Value: " + t.values[i].text
-				);
+			GUILayout.Label("Key");
+			GUILayout.Label("Value");
+
+			GUILayout.EndHorizontal();
+
+			mScroll = EditorGUILayout.BeginScrollView(mScroll);
+
+			GUILayout.BeginVertical();
+			for(int i=0; i < mLanguages.keys.Count; ++i) 
+			{
+				
+				GUILayout.BeginHorizontal();
+				
+				if(GUILayout.Button(mLanguages.keys[i] + " | " + t.values[i].text, "OL Title"))
+				{
+					
+					
+				}
+
+				GUILayout.EndHorizontal();
+
+				// GUILayout.Label("Key: " + mLanguages.keys[i]
+				// 	+ " | Value: " + t.values[i].text
+				// , "GroupBox", GUILayout.Width(position.width - 40));
+
 			}
+			GUILayout.EndVertical();
+
+			EditorGUILayout.EndScrollView();
+
+			GUILayout.BeginVertical();
+
+			GUILayout.Label("Source Text");
+			mOriginTextValue = EditorGUILayout.TextArea(mOriginTextValue, GUILayout.Height(80));
+
+			GUILayout.Label("Translated Text");
+			mTranslatedTextValue = EditorGUILayout.TextArea(mTranslatedTextValue, GUILayout.Height(80));
+
+			GUILayout.Label("Comments from the .po files will go here");
+
+			GUILayout.EndVertical();
+
+			EditorGUILayout.Space();
 		}
+
+		
+		// if(mLanguages != null) {
+		// 	M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
+
+		// 	for(int i=0; i < mLanguages.keys.Count; ++i) {
+		// 		GUILayout.Label("Key: " + mLanguages.keys[i]
+		// 			+ " | Value: " + t.values[i].text
+		// 		);
+		// 	}
+		// }
 	}
 
 	private void AddLanguageKeyValues ()
