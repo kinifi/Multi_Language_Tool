@@ -49,10 +49,9 @@ public class M10NStringDatabase : ScriptableObject {
 			}
 			m_database = new M10NStringTable[langMax];
 
-//			for(int i=0; i<m_database.Length; ++i) {
-//				if( m_database[i] == null ) Debug.Log("M10NStringTable is null on:" + (SystemLanguage) i);
-//				m_database[i].language = (SystemLanguage) i;
-//			}
+			for(int i=0; i<m_database.Length; ++i) {
+				m_database[i] = new M10NStringTable((SystemLanguage)i);
+			}
 		}
 
 		if( keys == null )

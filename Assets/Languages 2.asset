@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06ab10afbf824419c93450910acff9dc, type: 3}
-  m_Name: Languages
+  m_Name: Languages 2
   m_EditorClassIdentifier: 
   keys:
   - hoge
@@ -116,7 +116,7 @@ MonoBehaviour:
     isEditing: 0
   - language: 20
     values:
-    - m_value: 
+    - m_value: hogehoge
       m_pluralValues: []
     isEditing: 0
   - language: 21
@@ -126,7 +126,7 @@ MonoBehaviour:
     isEditing: 0
   - language: 22
     values:
-    - m_value: hogeo
+    - m_value: fuga
       m_pluralValues: []
     isEditing: 0
   - language: 23

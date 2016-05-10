@@ -10,13 +10,8 @@ public class MultiLanguage : EditorWindow {
 	//the language database that is selected
 	public M10NStringDatabase mLanguages;
 
-	public bool isLoaded = false;
-
 	//currently editing Language
 	public SystemLanguage mCurrentLanguage;
-
-	//popup selection of new language to add
-	public SystemLanguage mNewLanguageToAdd;
 
 	//new language key and values to edit
 	private string m_NewLanguageKey, m_NewLanguageValue;
@@ -52,35 +47,24 @@ public class MultiLanguage : EditorWindow {
 		
 	void OnGUI()
 	{
-
 		//draw the main area 
 		GUILayout.BeginArea(new Rect(0,0, position.width, position.height));
 
 		//check if the current language is loaded or not
-		if(isLoaded == true)
+		if(mLanguages != null)
 		{
 			//the menu that will always display on top
 			LanguageMenuBar();
 
-			if(mLanguages.languageCount > 0)
-			{
-				//display the buttons and text boxes so you can add key and values
-				AddLanguageKeyValues();
+			AddLanguageKeyValues ();
 
-				//display keys and values
-				LanguageKeyValueDisplay();
-			}
-			else
-			{
-				GUILayout.Label("Create A New Language");
-			}
-
+			//display keys and values
+			LanguageKeyValueDisplay();
 		}
 		else
 		{
 			//the language is not loaded
-			GUILayout.Label("No Language Asset Selected", "CN EntryError");
-
+			GUILayout.Label("Select Language Asset to Edit", "CN EntryError");
 		}
 
 		GUILayout.EndArea();
@@ -100,19 +84,6 @@ public class MultiLanguage : EditorWindow {
 		}
 	}
 
-	private void LoadDatabase ()
-	{
-//		if(mLanguages.languageCount > 0)
-//		{
-//			mCurrentLanguage = mLanguages.languages[0];
-//			//Debug.Log("Database is not empty. Assigning mCurrentLanguage");
-//		}
-//		else
-//		{
-//			//Debug.Log("Database is Empty");
-//		}
-	}
-
 	private void AddLanguageKeyValues ()
 	{
 
@@ -124,6 +95,7 @@ public class MultiLanguage : EditorWindow {
 		if(GUILayout.Button("Add"))
 		{
 			mLanguages.SetTextEntry(mCurrentLanguage, m_NewLanguageKey.ToLower(), m_NewLanguageValue);
+			EditorUtility.SetDirty(mLanguages);
 		}
 
 		GUILayout.EndHorizontal();
@@ -136,22 +108,11 @@ public class MultiLanguage : EditorWindow {
 		//the menu bar 
 		GUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.Width(position.width));
 
-
-		//select the language you want to add
-		mNewLanguageToAdd = (SystemLanguage) EditorGUILayout.EnumPopup("Add New Language:", mNewLanguageToAdd, EditorStyles.toolbarDropDown, GUILayout.Width(250));
-
-		//add the language you have selected
-		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(20)))
-		{
-			mLanguages.AddLanguage(mNewLanguageToAdd);
-			//Debug.Log("Add:" + mNewLanguageToAdd.ToString());
-		}
-
-		EditorGUILayout.Space();
-
 		//select the language you want to display
 		DoLanguageSelectionPopup();
 		//Debug.Log(currentLoadedLanguageListSelection);
+
+		EditorGUILayout.Space();
 
 		GUILayout.EndHorizontal();
 
@@ -182,28 +143,21 @@ public class MultiLanguage : EditorWindow {
 		}
 
 		//select the language you want to display
-		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup);
+		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup, GUILayout.Width(250));
 		mCurrentLanguage = loadedLanguages[selectionIndex];
 	}
 
 	public void DetectLanguageFileFromSelection ()
 	{
-	/*
-		mLanguages = null;
-
-		if (Selection.activeObject == null && mLanguages == null)
+		if (Selection.activeObject == null)
 		{
 			mLanguages = null;
 		}
-		*/
+
 		if (Selection.activeObject is M10NStringDatabase && EditorUtility.IsPersistent(Selection.activeObject))
 		{
 			mLanguages = Selection.activeObject as M10NStringDatabase;
-			LoadDatabase();
-			isLoaded = true;
-			//Debug.Log("Language Asset Selected and Loading");
 		}
-
 	}
 
 	public void OnFocus ()
@@ -219,7 +173,6 @@ public class MultiLanguage : EditorWindow {
 
 	public void OnSelectionChange ()
 	{
-
 		DetectLanguageFileFromSelection();
 		Repaint();
 
