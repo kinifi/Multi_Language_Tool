@@ -18,29 +18,47 @@ public struct M10NStringReference {
 
 	public M10NStringReference(M10NStringDatabase db, ref string key) {
 		m_db = db;
-//		m_key= key;
-
-		// TODO: get index of key from db
-		m_index = -1; 
-
+		this.key = key;
 		// TODO: register delegate event to keep track of db change (if editor)
 	}
 
 	public string text {
 		get {
-			Assert.IsNotNull(m_db);
+			//Assert.IsNotNull(m_db);
+			if(m_db == null || m_db.keys.Count < m_index) return string.Empty;
 			//TODO: return appropriate text of current language
 			return m_db.GetStringTable(Application.currentLanguage).values[m_index].text;
 		}
 	}
 
+	public M10NStringDatabase database {
+		get {
+			return m_db;
+		}
+		set {
+			m_db = value;
+		}
+	}
+
+	public string key {
+		get {
+			return m_db.keys[m_index];
+		}
+		set {
+			Assert.IsTrue(m_db.keys.Contains(value));
+			m_index = m_db.keys.IndexOf(value);
+		}
+	}
+
 	public string GetPluralString(long n) {
-		//TODO: return string in plural-aware form
-		return null;
+		return m_db.GetStringTable(Application.currentLanguage).values[m_index].GetPluralString(n);
 	}
 
 	public string Format(object[] args) {
-		//TODO: return string in formatted form
-		return null;
+		return m_db.GetStringTable(Application.currentLanguage).values[m_index].Format(args);
+	}
+
+	public string PluralFormat(long n) {
+		return m_db.GetStringTable(Application.currentLanguage).values[m_index].PluralFormat(n);
 	}
 }

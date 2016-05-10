@@ -13,9 +13,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keys:
   - hoge
+  - fuga
+  - goodbye
+  - hello
   m_database:
   - language: 0
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -23,9 +32,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 2
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -33,9 +54,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 4
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -43,9 +76,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 6
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -53,9 +98,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 8
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -63,14 +120,32 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 10
     values:
-    - m_value: 
+    - m_value: What is your problem?
+      m_pluralValues: []
+    - m_value: djkflasjdl;fajsdl;fakjsdl;fjasldfjsdl;
+      m_pluralValues: []
+    - m_value: Good bye!
+      m_pluralValues: []
+    - m_value: Hello!
       m_pluralValues: []
     isEditing: 0
   - language: 11
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -78,9 +153,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 13
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -88,9 +175,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 15
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -98,9 +197,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 17
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -108,9 +219,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 19
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -118,19 +241,43 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 21
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 22
     values:
-    - m_value: hogeo
+    - m_value: "\u307B\u3052\u307B\u3052\u3060\u3088\uFF1F\uFF1F"
+      m_pluralValues: []
+    - m_value: "\u306A\u3093\u3060\u3063\u3066\u306E\uFF1F"
+      m_pluralValues: []
+    - m_value: "\u3055\u3088\u3046\u306A\u3089\uFF01"
+      m_pluralValues: []
+    - m_value: "\u3053\u3093\u306B\u3061\u306F\uFF01"
       m_pluralValues: []
     isEditing: 0
   - language: 23
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -138,9 +285,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 25
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -148,9 +307,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 27
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -158,9 +329,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 29
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -168,9 +351,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 31
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -178,9 +373,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 33
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -188,9 +395,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 35
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -198,9 +417,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 37
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -208,9 +439,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 39
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0
@@ -218,9 +461,21 @@ MonoBehaviour:
     values:
     - m_value: 
       m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     isEditing: 0
   - language: 41
     values:
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
+    - m_value: 
+      m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     isEditing: 0

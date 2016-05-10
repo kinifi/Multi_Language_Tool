@@ -74,6 +74,10 @@ public class M10NStringDatabase : ScriptableObject {
 		return m_database[(int)lang];
 	}
 
+	public M10NStringTable GetStringTable() {
+		return m_database[(int)Application.currentLanguage];
+	}
+
 	public void AddTextEntry(string key) {
 		Assert.IsNotNull(key);
 
