@@ -19,6 +19,9 @@ public class MultiLanguage : EditorWindow {
 	private SystemLanguage[] loadedLanguages;
 	private string[] loadedLanguagesString;
 
+	private Vector2 entryScroll;
+	private int keySelected;
+
 	[MenuItem("Window/Multi-Language %l")]
 	static void ShowEditor() {
 
@@ -74,13 +77,28 @@ public class MultiLanguage : EditorWindow {
 	private void LanguageKeyValueDisplay()
 	{
 		if(mLanguages != null) {
+			GUILayout.BeginVertical(GUI.skin.box);
+			entryScroll = GUILayout.BeginScrollView(entryScroll);
 			M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
-
-			for(int i=0; i < mLanguages.keys.Count; ++i) {
-				GUILayout.Label("Key: " + mLanguages.keys[i]
-					+ " | Value: " + t.values[i].text
-				);
+			for (int i = 0; i < mLanguages.keys.Count; i++)
+			{
+				if( keySelected == i ) {
+					GUILayout.Label("Key: " + mLanguages.keys[i]
+						+ " | Value: " + t.values[i].text, EditorStyles.boldLabel
+					);
+				} else {
+					GUILayout.Label("Key: " + mLanguages.keys[i]
+						+ " | Value: " + t.values[i].text
+					);
+				}
+				if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+				{
+					keySelected = i;
+					//Debug.Log("Selected index:"+i);
+				}
 			}
+			GUILayout.EndScrollView();
+			GUILayout.EndVertical();
 		}
 	}
 
