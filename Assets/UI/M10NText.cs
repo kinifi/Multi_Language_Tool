@@ -14,6 +14,12 @@ public class M10NText : UnityEngine.UI.Text
     {
 	}
 
+	public M10NStringDatabase database {
+		get {
+			return m_reference.database;
+		}
+	}
+
     public override string text
     {
         get

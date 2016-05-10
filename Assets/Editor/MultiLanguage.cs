@@ -251,6 +251,8 @@ public class MultiLanguage : EditorWindow {
 
 	public void DetectLanguageFileFromSelection ()
 	{
+		M10NStringDatabase selectedAsset = null;
+
 		if (Selection.activeObject == null)
 		{
 			mLanguages = null;
@@ -258,7 +260,21 @@ public class MultiLanguage : EditorWindow {
 
 		if (Selection.activeObject is M10NStringDatabase && EditorUtility.IsPersistent(Selection.activeObject))
 		{
-			mLanguages = Selection.activeObject as M10NStringDatabase;
+			selectedAsset = Selection.activeObject as M10NStringDatabase;
+		}
+
+		if (Selection.activeGameObject)
+		{
+			M10NText m10ntext = Selection.activeGameObject.GetComponent<M10NText>();
+			if (m10ntext)
+			{
+				selectedAsset = m10ntext.database;
+			}
+		}
+				
+		if (selectedAsset != null && selectedAsset != mLanguages)
+		{
+			mLanguages = selectedAsset;
 		}
 	}
 
