@@ -19,7 +19,11 @@ public class MultiLanguage : EditorWindow {
 	private SystemLanguage[] loadedLanguages;
 	private string[] loadedLanguagesString;
 
-	private Vector2 entryScroll;
+	private Vector2 mScroll;
+
+	private string mOriginTextValue;
+	private string mTranslatedTextValue;
+
 	private int keySelected;
 
 	[MenuItem("Window/Multi-Language %l")]
@@ -77,29 +81,85 @@ public class MultiLanguage : EditorWindow {
 	private void LanguageKeyValueDisplay()
 	{
 		if(mLanguages != null) {
-			GUILayout.BeginVertical(GUI.skin.box);
-			entryScroll = GUILayout.BeginScrollView(entryScroll);
 			M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
-			for (int i = 0; i < mLanguages.keys.Count; i++)
+
+			//create the box that shows the Titles Key & Values			
+			GUILayout.BeginHorizontal("HelpBox");
+			GUILayout.Label("Key");
+			GUILayout.Label("Value");
+			GUILayout.EndHorizontal();
+			//end of box that shows titles
+
+			//start the scroll box here so values and keys can be scrollable
+			mScroll = EditorGUILayout.BeginScrollView(mScroll);
+
+			//being the vertical view of the key and values
+			GUILayout.BeginVertical();
+			float columnWidth = (position.width / 2.0f) - 20.0f;
+			for(int i=0; i < mLanguages.keys.Count; ++i) 
 			{
-				if( keySelected == i ) {
-					GUILayout.Label("Key: " + mLanguages.keys[i]
-						+ " | Value: " + t.values[i].text, EditorStyles.boldLabel
-					);
-				} else {
-					GUILayout.Label("Key: " + mLanguages.keys[i]
-						+ " | Value: " + t.values[i].text
-					);
-				}
-				if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+				GUILayout.BeginHorizontal( ((keySelected == i) ? "SelectionRect" : "HelpBox" ));
+
+				GUILayout.Label(mLanguages.keys[i], GUILayout.Width(columnWidth));
+				GUILayout.Label(t.values[i].text, GUILayout.Width(columnWidth));
+
+				GUILayout.EndHorizontal();
+				if (Event.current.clickCount == 1 && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
 				{
 					keySelected = i;
 					//Debug.Log("Selected index:"+i);
 				}
+
+				// GUILayout.Label("Key: " + mLanguages.keys[i]
+				// 	+ " | Value: " + t.values[i].text
+				// , "GroupBox", GUILayout.Width(position.width - 40));
+
 			}
-			GUILayout.EndScrollView();
 			GUILayout.EndVertical();
+
+			EditorGUILayout.EndScrollView();
+			string key = mLanguages.keys[keySelected];
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Key:");
+			GUI.changed = false;
+			string newKey = EditorGUILayout.TextField(key);
+			if(GUI.changed) {
+				mLanguages.RenameTextEntryKey(key, newKey);
+				EditorUtility.SetDirty(mLanguages);
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginVertical();
+			GUILayout.Label("Source Text", EditorStyles.boldLabel);
+			mOriginTextValue = EditorGUILayout.TextArea(mOriginTextValue, GUILayout.Height(80));
+
+			GUILayout.Label("Translated Text", EditorStyles.boldLabel);
+			mTranslatedTextValue = mLanguages.GetStringTable(mCurrentLanguage).values[keySelected].text;
+			GUI.changed = false;
+			mTranslatedTextValue = EditorGUILayout.TextArea(mTranslatedTextValue, GUILayout.Height(80));
+			if(GUI.changed) {
+				mLanguages.SetTextEntry(mCurrentLanguage, key, mTranslatedTextValue);
+				EditorUtility.SetDirty(mLanguages);
+			}
+
+			GUILayout.Label("Comments from the .po files will go here");
+
+			GUILayout.EndVertical();
+
+			EditorGUILayout.Space();
 		}
+
+		
+		// if(mLanguages != null) {
+		// 	M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
+
+		// 	for(int i=0; i < mLanguages.keys.Count; ++i) {
+		// 		GUILayout.Label("Key: " + mLanguages.keys[i]
+		// 			+ " | Value: " + t.values[i].text
+		// 		);
+		// 	}
+		// }
 	}
 
 	private void AddLanguageKeyValues ()
@@ -132,7 +192,31 @@ public class MultiLanguage : EditorWindow {
 
 		EditorGUILayout.Space();
 
+		//export the selected language
+		ExportLanguageFile();
+		
+		//select to get a .po file and import to the language asset
+		ImportLanguageFile();
+
 		GUILayout.EndHorizontal();
+
+	}
+
+	public void ExportLanguageFile ()
+	{
+		if(GUILayout.Button("Export Language", EditorStyles.toolbarButton))
+		{
+			//start exporting language File here
+		}
+
+	}
+
+	public void ImportLanguageFile()
+	{
+		if(GUILayout.Button("Import Language", EditorStyles.toolbarButton))
+		{
+			//start exporting language File here
+		}
 
 	}
 
