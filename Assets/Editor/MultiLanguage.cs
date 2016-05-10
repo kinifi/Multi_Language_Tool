@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class MultiLanguage : EditorWindow {
 
 	//the language database that is selected
-	public LanguageDatabase mLanguages;
+	public M10NStringDatabase mLanguages;
 
 	public bool isLoaded = false;
 
@@ -22,8 +22,8 @@ public class MultiLanguage : EditorWindow {
 	//new language key and values to edit
 	private string m_NewLanguageKey, m_NewLanguageValue;
 
-	private string[] loadedLanguageList;
-	private int currentLoadedLanguageListSelection;
+	private SystemLanguage[] loadedLanguages;
+	private string[] loadedLanguagesString;
 
 	[MenuItem("Window/Multi-Language %l")]
 	static void ShowEditor() {
@@ -31,7 +31,7 @@ public class MultiLanguage : EditorWindow {
 		//create the editor window
 		MultiLanguage editor = EditorWindow.GetWindow<MultiLanguage>();
 		//the editor window must have a min size
-		editor.minSize = new Vector2 (800, 600);
+		editor.minSize = new Vector2 (400, 300);
 		//call the init method after we create our window
 		editor.Init();
 
@@ -55,7 +55,7 @@ public class MultiLanguage : EditorWindow {
 	{
 
 		//draw the main area 
-		GUILayout.BeginArea(new Rect(0,0, Screen.width, Screen.height));
+		GUILayout.BeginArea(new Rect(0,0, position.width, position.height));
 
 		//check if the current language is loaded or not
 		if(isLoaded == true)
@@ -63,7 +63,7 @@ public class MultiLanguage : EditorWindow {
 			//the menu that will always display on top
 			LanguageMenuBar();
 
-			if(mLanguages.database != null)
+			if(mLanguages.languageCount > 0)
 			{
 				//display the buttons and text boxes so you can add key and values
 				AddLanguageKeyValues();
@@ -90,12 +90,12 @@ public class MultiLanguage : EditorWindow {
 
 	private void LanguageKeyValueDisplay()
 	{
-		if(mLanguages.database[currentLoadedLanguageListSelection].keys.Count != 0)
-		{
-			for (int i = 0; i < mLanguages.database[currentLoadedLanguageListSelection].keys.Count; i++) 
-			{
-				GUILayout.Label("Key: " + mLanguages.database[currentLoadedLanguageListSelection].keys[i]
-					+ " | Value: " + mLanguages.database[currentLoadedLanguageListSelection].values[i]
+		if(mLanguages != null) {
+			M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
+
+			for(int i=0; i < mLanguages.keys.Count; ++i) {
+				GUILayout.Label("Key: " + mLanguages.keys[i]
+					+ " | Value: " + t.values[i].text
 				);
 			}
 		}
@@ -103,15 +103,10 @@ public class MultiLanguage : EditorWindow {
 
 	private void LoadDatabase ()
 	{
-		if(mLanguages.database == null)
+		if(mLanguages.languageCount > 0)
 		{
-			if(mLanguages.database[0] != null)
-			{
-				mCurrentLanguage = mLanguages.database[0].languageName;
-				//populate the list
-				populateLanguagesList();
-				Debug.Log("Database is not empty. Assigning mCurrentLanguage");
-			}
+			mCurrentLanguage = mLanguages.languages[0];
+			//Debug.Log("Database is not empty. Assigning mCurrentLanguage");
 		}
 		else
 		{
@@ -129,21 +124,7 @@ public class MultiLanguage : EditorWindow {
 		//add the language you have selected
 		if(GUILayout.Button("Add"))
 		{
-			//check if a key already exists
-			if(mLanguages.database[currentLoadedLanguageListSelection].keys.Contains(m_NewLanguageKey.ToLower()))
-			{
-				//throw error to user if this key already exists
-				EditorUtility.DisplayDialog("Mult-Language Error", "The Key Already Exists", "Okay", "");
-			}
-			else
-			{
-				//key doesn't exist
-				//add the key and value to the language
-				mLanguages.database[currentLoadedLanguageListSelection].keys.Add(m_NewLanguageKey.ToLower());
-				mLanguages.database[currentLoadedLanguageListSelection].values.Add(m_NewLanguageValue);
-				//Debug.Log("Adding: Key" + m_NewLanguageKey + " | Value: " + m_NewLanguageValue);
-			}
-
+			mLanguages.SetTextEntry(mCurrentLanguage, m_NewLanguageKey.ToLower(), m_NewLanguageValue);
 		}
 
 		GUILayout.EndHorizontal();
@@ -154,7 +135,7 @@ public class MultiLanguage : EditorWindow {
 	{
 
 		//the menu bar 
-		GUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.Width(Screen.width));
+		GUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.Width(position.width));
 
 
 		//select the language you want to add
@@ -163,51 +144,45 @@ public class MultiLanguage : EditorWindow {
 		//add the language you have selected
 		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(20)))
 		{
-			Language _newLanguage = new Language();
-			_newLanguage.languageName = mNewSystemLanguage;
-
-			mLanguages.database.Add(_newLanguage);
-
+			mLanguages.AddLanguage(mNewSystemLanguage);
 			//Debug.Log("Add:" + mNewSystemLanguage.ToString());
 		}
 
 		EditorGUILayout.Space();
 
-		populateLanguagesList();
-
 		//select the language you want to display
-		currentLoadedLanguageListSelection = EditorGUILayout.Popup(currentLoadedLanguageListSelection, loadedLanguageList, EditorStyles.toolbarPopup);
+		DoLanguageSelectionPopup();
 		//Debug.Log(currentLoadedLanguageListSelection);
 
 		GUILayout.EndHorizontal();
 
 	}
 
-	public void populateLanguagesList()
+	public void DoLanguageSelectionPopup()
 	{
-
 		if(mLanguages == null)
 		{
-			loadedLanguageList = new string[0];
+			string[] nodata = {""};
+			EditorGUILayout.Popup(0, nodata, EditorStyles.toolbarPopup);
 			return;
 		}
 
-		if(loadedLanguageList == null || mLanguages.database.Count != loadedLanguageList.Length) 
-		{
-			
-			//create a local list
-			List<string> languageList = new List<string>();
+		int selectionIndex = 0;
 
-			//add all the languages to the local list
-			for (int i = 0; i < mLanguages.database.Count; i++) 
-			{
-				languageList.Add(mLanguages.database[i].languageName.ToString());
+		if( loadedLanguages == null || loadedLanguages.Length != mLanguages.languageCount ) {
+			loadedLanguages = mLanguages.languages;
+			loadedLanguagesString = new string[loadedLanguages.Length];
+			for(int i = 0; i < loadedLanguages.Length; ++i) {
+				loadedLanguagesString[i] = loadedLanguages[i].ToString();
+				if(loadedLanguages[i] == mCurrentLanguage) {
+					selectionIndex = i;
+				}
 			}
-
-			//convert the list to an array and use it for our popupMenu
-			loadedLanguageList = languageList.ToArray();
-			//Debug.Log(loadedLanguageList);
 		}
+
+		//select the language you want to display
+		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup);
+		mCurrentLanguage = loadedLanguages[selectionIndex];
 	}
 
 	public void DetectLanguageFileFromSelection ()
@@ -219,9 +194,9 @@ public class MultiLanguage : EditorWindow {
 			mLanguages = null;
 		}
 		
-		if (Selection.activeObject is LanguageDatabase && EditorUtility.IsPersistent(Selection.activeObject))
+		if (Selection.activeObject is M10NStringDatabase && EditorUtility.IsPersistent(Selection.activeObject))
 		{
-			mLanguages = Selection.activeObject as LanguageDatabase;
+			mLanguages = Selection.activeObject as M10NStringDatabase;
 			LoadDatabase();
 			isLoaded = true;
 			//Debug.Log("Language Asset Selected and Loading");
