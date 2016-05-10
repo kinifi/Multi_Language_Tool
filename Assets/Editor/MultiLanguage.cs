@@ -12,12 +12,11 @@ public class MultiLanguage : EditorWindow {
 
 	public bool isLoaded = false;
 
-	//currently editing Languages
+	//currently editing Language
 	public SystemLanguage mCurrentLanguage;
 
-	//enum of the avaliable languages
-	public SystemLanguage mSystemLanguage;
-	public SystemLanguage mNewSystemLanguage;
+	//popup selection of new language to add
+	public SystemLanguage mNewLanguageToAdd;
 
 	//new language key and values to edit
 	private string m_NewLanguageKey, m_NewLanguageValue;
@@ -103,15 +102,15 @@ public class MultiLanguage : EditorWindow {
 
 	private void LoadDatabase ()
 	{
-		if(mLanguages.languageCount > 0)
-		{
-			mCurrentLanguage = mLanguages.languages[0];
-			//Debug.Log("Database is not empty. Assigning mCurrentLanguage");
-		}
-		else
-		{
-			//Debug.Log("Database is Empty");
-		}
+//		if(mLanguages.languageCount > 0)
+//		{
+//			mCurrentLanguage = mLanguages.languages[0];
+//			//Debug.Log("Database is not empty. Assigning mCurrentLanguage");
+//		}
+//		else
+//		{
+//			//Debug.Log("Database is Empty");
+//		}
 	}
 
 	private void AddLanguageKeyValues ()
@@ -139,13 +138,13 @@ public class MultiLanguage : EditorWindow {
 
 
 		//select the language you want to add
-		mNewSystemLanguage = (SystemLanguage) EditorGUILayout.EnumPopup("Add New Language:", mNewSystemLanguage, EditorStyles.toolbarDropDown, GUILayout.Width(250));
+		mNewLanguageToAdd = (SystemLanguage) EditorGUILayout.EnumPopup("Add New Language:", mNewLanguageToAdd, EditorStyles.toolbarDropDown, GUILayout.Width(250));
 
 		//add the language you have selected
 		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(20)))
 		{
-			mLanguages.AddLanguage(mNewSystemLanguage);
-			//Debug.Log("Add:" + mNewSystemLanguage.ToString());
+			mLanguages.AddLanguage(mNewLanguageToAdd);
+			//Debug.Log("Add:" + mNewLanguageToAdd.ToString());
 		}
 
 		EditorGUILayout.Space();
@@ -167,16 +166,18 @@ public class MultiLanguage : EditorWindow {
 			return;
 		}
 
-		int selectionIndex = 0;
-
 		if( loadedLanguages == null || loadedLanguages.Length != mLanguages.languageCount ) {
 			loadedLanguages = mLanguages.languages;
 			loadedLanguagesString = new string[loadedLanguages.Length];
 			for(int i = 0; i < loadedLanguages.Length; ++i) {
 				loadedLanguagesString[i] = loadedLanguages[i].ToString();
-				if(loadedLanguages[i] == mCurrentLanguage) {
-					selectionIndex = i;
-				}
+			}
+		}
+
+		int selectionIndex = 0;
+		for(int i = 0; i < loadedLanguages.Length; ++i) {
+			if(loadedLanguages[i] == mCurrentLanguage) {
+				selectionIndex = i;
 			}
 		}
 
