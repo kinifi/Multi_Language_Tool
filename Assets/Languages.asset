@@ -45,17 +45,17 @@ MonoBehaviour:
       m_pluralValues: []
     - m_value: 
       m_pluralValues: []
-    - m_value: 
+    - m_value: This is translated Text
       m_pluralValues: []
     - m_value: 
       m_pluralValues: []
     - m_value: 
       m_pluralValues: []
-    - m_value: 
+    - m_value: is it me your looking for?
       m_pluralValues: []
-    - m_value: 
+    - m_value: I can see it in your eyes
       m_pluralValues: []
-    - m_value: 
+    - m_value: weird shit
       m_pluralValues: []
     isEditing: 0
   - language: 1

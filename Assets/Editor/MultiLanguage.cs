@@ -67,11 +67,14 @@ public class MultiLanguage : EditorWindow {
 
 			//display keys and values
 			LanguageKeyValueDisplay();
+
+			//remove notification if we were displaying one
+			RemoveNotification();
 		}
 		else
 		{
 			//the language is not loaded
-			GUILayout.Label("Select Language Asset to Edit", "CN EntryError");
+			ShowNotification(new GUIContent(EditorGUILayout.TextField("Select A Language To Edit"))); 
 		}
 
 		GUILayout.EndArea();
