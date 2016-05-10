@@ -23,6 +23,8 @@ public class MultiLanguage : EditorWindow {
 
 	private string mTranslatedTextValue, mOriginTextValue;
 
+	private int selGridInt;
+
 	[MenuItem("Window/Multi-Language %l")]
 	static void ShowEditor() {
 
@@ -81,21 +83,23 @@ public class MultiLanguage : EditorWindow {
 		if(mLanguages != null) {
 			M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
 			
+			//create the box that shows the Titles Key & Values			
 			GUILayout.BeginHorizontal("HelpBox");
-
 			GUILayout.Label("Key");
 			GUILayout.Label("Value");
-
 			GUILayout.EndHorizontal();
+			//end of box that shows titles
 
+			//start the scroll box here so values and keys can be scrollable
 			mScroll = EditorGUILayout.BeginScrollView(mScroll);
 
+			//being the vertical view of the key and values
 			GUILayout.BeginVertical();
 			for(int i=0; i < mLanguages.keys.Count; ++i) 
 			{
 				
 				GUILayout.BeginHorizontal();
-				
+
 				if(GUILayout.Button(mLanguages.keys[i] + " | " + t.values[i].text, "OL Title"))
 				{
 					
@@ -170,7 +174,31 @@ public class MultiLanguage : EditorWindow {
 
 		EditorGUILayout.Space();
 
+		//export the selected language
+		ExportLanguageFile();
+		
+		//select to get a .po file and import to the language asset
+		ImportLanguageFile();
+
 		GUILayout.EndHorizontal();
+
+	}
+
+	public void ExportLanguageFile ()
+	{
+		if(GUILayout.Button("Export Language", EditorStyles.toolbarButton))
+		{
+			//start exporting language File here
+		}
+
+	}
+
+	public void ImportLanguageFile()
+	{
+		if(GUILayout.Button("Import Language", EditorStyles.toolbarButton))
+		{
+			//start exporting language File here
+		}
 
 	}
 
