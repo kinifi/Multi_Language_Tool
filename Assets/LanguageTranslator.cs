@@ -30,17 +30,4 @@ public class LanguageTranslator : MonoBehaviour {
 
 	}
 
-	[ContextMenu("Create Test PO File")]
-	public void testPOCreationFile()
-	{
-		POCreator.POEntry("key", "hello", "hola", "first po entry!");
-		POCreator.CreateEntryFile(SystemLanguage.English);
-	}
-
-	[ContextMenu("Create Empty Test PO File")]
-	public void testEmptyPOCreationFile()
-	{
-		POCreator.CreateEntryFile(SystemLanguage.English);
-	}
-
 }
