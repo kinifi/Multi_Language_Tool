@@ -6,7 +6,7 @@ using System.Collections;
 public class LanguageTranslator : MonoBehaviour {
 
 	//public variable for LanguageDatabase
-	public LanguageDatabase mDatabase;
+	public M10NStringDatabase mDatabase;
 
 	// Use this for initialization
 	void Start () {
