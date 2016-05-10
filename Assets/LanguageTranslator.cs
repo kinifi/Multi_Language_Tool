@@ -17,6 +17,9 @@ public class LanguageTranslator : MonoBehaviour {
 			Debug.LogError("Language Database Is Not Assigned");
 		}
 
+		POCreator.POEntry("key", "hello", "hola", "first po entry!");
+		POCreator.CreateEntryFile(SystemLanguage.English);
+
 		//get the system current language
 
 		//check if the database has a value for that language
@@ -25,6 +28,19 @@ public class LanguageTranslator : MonoBehaviour {
 
 		//if not. Default to the text that is entered in the text box
 
+	}
+
+	[ContextMenu("Create Test PO File")]
+	public void testPOCreationFile()
+	{
+		POCreator.POEntry("key", "hello", "hola", "first po entry!");
+		POCreator.CreateEntryFile(SystemLanguage.English);
+	}
+
+	[ContextMenu("Create Empty Test PO File")]
+	public void testEmptyPOCreationFile()
+	{
+		POCreator.CreateEntryFile(SystemLanguage.English);
 	}
 
 }
