@@ -187,13 +187,14 @@ public class MultiLanguage : EditorWindow {
 
 	public void DetectLanguageFileFromSelection ()
 	{
+	/*
 		mLanguages = null;
 
 		if (Selection.activeObject == null && mLanguages == null)
 		{
 			mLanguages = null;
 		}
-		
+		*/
 		if (Selection.activeObject is M10NStringDatabase && EditorUtility.IsPersistent(Selection.activeObject))
 		{
 			mLanguages = Selection.activeObject as M10NStringDatabase;
