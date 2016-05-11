@@ -82,7 +82,7 @@ public class M10NStringTableListViewNode : TreeViewItem
 public class M10NStringTableDataSource : TreeViewDataSource
 {
 
-	public M10NStringDatabase m_db;
+	private M10NStringDatabase m_db;
 //	public SystemLanguage m_targetLanguage;
 	private List<TreeViewItem> m_items;
 
@@ -94,15 +94,27 @@ public class M10NStringTableDataSource : TreeViewDataSource
 		m_items = new List<TreeViewItem>();
 	}
 
+	public M10NStringDatabase database {
+		get {
+			return m_db;
+		}
+		set {
+			m_db = value;
+		}
+	}
+
 	private void AddAllNodes()
 	{
-		m_items = new List<TreeViewItem>();
+		var newRoot = new TreeViewItem(-1, 0, null, "Root");
 		for (int i = 0; i < m_db.keys.Count; ++i)
 		{
+//			Debug.Log("[M10N LV]added child " + i + ":" + m_db.keys[i]);
 			//int uniqueNodeID = GetUniqueNodeID();
-			var node = new M10NStringTableListViewNode(i, 1, null, m_db.keys[i], i);
-			m_items.Add(node);
+			var node = new M10NStringTableListViewNode(i, 1, m_RootItem, m_db.keys[i], i);
+			newRoot.AddChild(node);
 		}
+
+		m_RootItem = newRoot;
 	}
 
 //	static public int GetUniqueNodeID (AudioMixerGroupController group)
@@ -185,7 +197,7 @@ public class M10NStringTableListViewGUI : TreeViewGUI
 		var stringTable = node as M10NStringTableListViewNode;
 		if (stringTable != null)
 		{
-			GUI.Label(rowRect, "Hoge Table " + stringTable.stringTableIndex);
+			//GUI.Label(rowRect, "Hoge Table " + stringTable.stringTableIndex);
 
 
 ////			bool oldSelected = m_Controller.CurrentViewContainsGroup (audioNode.group.groupID);
@@ -275,6 +287,7 @@ public class M10NStringTableListViewGUI : TreeViewGUI
 
 public class M10NStringTableListView
 {
+	private MultiLanguage m_editorWindow;
 	private M10NStringDatabase m_db;
 	private M10NStringTableDataSource m_StringTableDataSource;
 	private TreeViewState m_StringTableTreeState;
@@ -294,6 +307,7 @@ public class M10NStringTableListView
 
 	public M10NStringTableListView (MultiLanguage editorWindow, TreeViewState treeState, M10NStringDatabase db)
 	{
+		m_editorWindow = editorWindow;
 		m_db = db;
 		m_StringTableTreeState = treeState;
 
@@ -526,6 +540,9 @@ public class M10NStringTableListView
 		if(selection.Length == 1) {
 			m_ScrollToItem = selection[0];
 		}
+
+		m_editorWindow.OnStringTableSelectionChanged(selection);
+
 		//UnityEditor.InspectorWindow.RepaintAllInspectors();
 	}
 
@@ -634,22 +651,22 @@ public class M10NStringTableListView
 		}
 	}
 
-//	public void OnMixerControllerChanged(AudioMixerController controller)
-//	{
-//		if (m_Controller != controller)
-//		{
-//			m_TreeViewGUI.m_Controller = controller;
-//			m_Controller = controller;
-//			m_AudioGroupTreeDataSource.m_Controller = controller;
-//			if (controller != null)
-//			{
-//				ReloadTree();
-//				InitSelection (false);
+	public void OnM10NStringDatabaseChanged(M10NStringDatabase db)
+	{
+		if (m_db != db)
+		{
+			m_TreeViewGUI.m_db = db;
+			m_db = db;
+			m_StringTableDataSource.database = db;
+			if (db != null)
+			{
+				ReloadTree();
+				InitSelection (false);
 //				LoadExpandedState ();
-//				m_AudioGroupTree.data.SetExpandedWithChildren (m_AudioGroupTree.data.root, true);
-//			}
-//		}
-//	}
+				m_StringTableTree.data.SetExpandedWithChildren (m_StringTableTree.data.root, true);
+			}
+		}
+	}
 
 //	static string GetUniqueAudioMixerName (AudioMixerController controller)
 //	{

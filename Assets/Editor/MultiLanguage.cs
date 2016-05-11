@@ -28,10 +28,19 @@ public class MultiLanguage : EditorWindow {
 
 	private int keySelected;
 
+	private SplitterState mHorizontalSplitterState;
 	private SplitterState mVerticalSplitterState;
 
 	private TreeViewState m_stringTableListViewState;
 	private M10NStringTableListView m_listview;
+
+	private bool m_isInitialized;
+
+	public class Styles {
+		public readonly int kToolbarHeight = 20;
+		public readonly int kEditorPaneHeight = 400;
+	}
+	static Styles s_Styles;
 
 	[MenuItem("Window/Multi-Language %l")]
 	static void ShowEditor() {
@@ -54,17 +63,24 @@ public class MultiLanguage : EditorWindow {
 	// Use this for initialization
 	public void Init() 
 	{
-		if (m_stringTableListViewState == null)
+		if(m_isInitialized) {
+			return;
+		}
+
+		if (m_stringTableListViewState == null) {
 			m_stringTableListViewState = new TreeViewState();
-		
-		m_listview = new M10NStringTableListView(this, m_stringTableListViewState, mLanguages);
+		}
 
-//					m_LayoutStripsOnTop.m_VerticalSplitter = new SplitterState(new int[] { 65, 35 }, new int[] { 85, 105 }, null);
-//					m_LayoutStripsOnTop.m_HorizontalSplitter = new SplitterState (new int[] { 60, 60, 60, 60 }, new int[] { 85, 85, 85, 85 }, null);
+		if( m_listview == null ) {
+			m_listview = new M10NStringTableListView(this, m_stringTableListViewState, mLanguages);
+		}
 
-		mVerticalSplitterState = new SplitterState(new int[] { 65, 35 }, new int[] { 85, 105 }, null);
+		mHorizontalSplitterState = new SplitterState(new int[] { 200, 100 }, null, null);
+		mVerticalSplitterState = new SplitterState(new int[] { 200, 100 }, null, null);
 
 		ResetEditorStatus();
+
+		m_isInitialized = true;
 	}
 
 	public void ResetEditorStatus() {
@@ -78,7 +94,7 @@ public class MultiLanguage : EditorWindow {
 		mOriginTextValue = string.Empty;
 		mTranslatedTextValue = string.Empty;
 
-		keySelected = 0;
+		keySelected = -1;
 	}
 
 	public void OnEnable ()
@@ -89,28 +105,59 @@ public class MultiLanguage : EditorWindow {
 		
 	void OnGUI()
 	{
+		Init();
+
+		if(s_Styles == null) {
+			s_Styles = new Styles();
+		}
+
 		//draw the main area 
 		GUILayout.BeginArea(new Rect(0,0, position.width, position.height));
 
 		//check if the current language is loaded or not
 		if(mLanguages != null)
 		{
-			// Do layouting
-//			SplitterGUILayout.BeginVerticalSplit(mVerticalSplitterState, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-//			GUILayout.BeginVertical ();
-//			GUILayout.EndVertical ();
-//			SplitterGUILayout.EndVerticalSplit();
-//
-//			Rect splitViewRect = new Rect (0, 0, position.width, mVerticalSplitterState.realSizes[0]);
+			Rect menubarRect   = new Rect(0,0,position.width, s_Styles.kToolbarHeight);
 
 			//the menu that will always display on top
-			DoLanguageMenuBar();
+			DoLanguageMenuBar(menubarRect);
+
+			// Do layouting
+			SplitterGUILayout.BeginHorizontalSplit(mHorizontalSplitterState, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+			GUILayout.BeginVertical ();
+			SplitterGUILayout.BeginVerticalSplit(mVerticalSplitterState, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+			GUILayout.BeginHorizontal ();
+			GUILayout.EndHorizontal ();
+			SplitterGUILayout.EndVerticalSplit();
+			GUILayout.EndVertical ();
+			SplitterGUILayout.EndHorizontalSplit();
+
+			// do split here
+//			m_LeftEditorSplitter.DoResizeScrollView(new Rect(0, 0, position.width, position.height));
+//			int editorWidth = (int)position.width-(int)position.width/4;
+//			int commentWidth = (int)position.width/4;
+			int editorWidth = (int)mHorizontalSplitterState.realSizes[0];
+			int commentWidth = (int)mHorizontalSplitterState.realSizes[1];
+
+			int listViewHeight = (int)mVerticalSplitterState.realSizes[0];
+			int editorHeight = (int)mVerticalSplitterState.realSizes[1];
+
+//			Rect leftPaneRect_listview = new Rect(0, s_Styles.kToolbarHeight, editorWidth, position.height- s_Styles.kEditorPaneHeight - s_Styles.kToolbarHeight);
+//			Rect leftPaneRect_editorview = new Rect(0, leftPaneRect_listview.y + leftPaneRect_listview.height, editorWidth, s_Styles.kEditorPaneHeight);
+//			Rect rightPaneRect = new Rect(editorWidth, s_Styles.kToolbarHeight, commentWidth, position.height - s_Styles.kToolbarHeight);
+			Rect leftPaneRect_listview = new Rect(0, s_Styles.kToolbarHeight, editorWidth, listViewHeight);
+			Rect leftPaneRect_editorview = new Rect(0, leftPaneRect_listview.height, editorWidth, editorHeight);
+
+			Rect rightPaneRect = new Rect(editorWidth, s_Styles.kToolbarHeight, commentWidth, position.height - s_Styles.kToolbarHeight);
 
 			//display keys and values
-			DoLanguageKeyValueListView();
+			DoLanguageKeyValueListView(leftPaneRect_listview);
 
 			//display edit field
-			DoLanguageKeyValueEditor();
+			DoLanguageKeyValueEditor(leftPaneRect_editorview);
+
+			//display edit field
+			DoRightSideView(rightPaneRect);
 
 			//remove notification if we were displaying one
 			RemoveNotification();
@@ -125,47 +172,65 @@ public class MultiLanguage : EditorWindow {
 
 	}
 
-	private void DoLanguageKeyValueListView()
+	private void DoRightSideView(Rect paneRectSize)
 	{
 		Assert.IsNotNull(mLanguages);
-
 //		m_listview.UseScrollView(true);
 //		m_listview.OnGUI (sectionRect);
 
+        GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
+        
+        GUILayout.Label("show comment here");
+        
+        
+        GUILayout.EndArea();
 
-		M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
-
-		//create the box that shows the Titles Key & Values			
-		GUILayout.BeginHorizontal("HelpBox");
-		GUILayout.Label("Key");
-		GUILayout.Label("Value");
-		GUILayout.EndHorizontal();
-		//end of box that shows titles
-
-		//start the scroll box here so values and keys can be scrollable
-		mScroll = EditorGUILayout.BeginScrollView(mScroll);
-
-		//being the vertical view of the key and values
-		GUILayout.BeginVertical();
-		float columnWidth = (position.width / 2.0f) - 20.0f;
-		for(int i=0; i < mLanguages.keys.Count; ++i) 
-		{
-			GUILayout.BeginHorizontal( ((keySelected == i) ? "SelectionRect" : "HelpBox" ));
-
-			GUILayout.Label(mLanguages.keys[i], GUILayout.Width(columnWidth));
-			GUILayout.Label(t.values[i].text, GUILayout.Width(columnWidth));
-
-			GUILayout.EndHorizontal();
-			if (Event.current.clickCount == 1 && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
-			{
-				keySelected = i;
-			}
-		}
-		GUILayout.EndVertical();
-		EditorGUILayout.EndScrollView();
 	}
 
-	private void DoLanguageKeyValueEditor()
+	private void DoLanguageKeyValueListView(Rect paneRectSize)
+	{
+		Assert.IsNotNull(mLanguages);
+
+//        GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
+
+		if (m_listview != null) {
+			m_listview.OnGUI(paneRectSize);
+		}
+
+//		M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
+//
+//		// //create the box that shows the Titles Key & Values			
+//		// GUILayout.BeginHorizontal("HelpBox");
+//		// GUILayout.Label("Key");
+//		// GUILayout.Label("Value");
+//		// GUILayout.EndHorizontal();
+//		// //end of box that shows titles
+//
+//		//start the scroll box here so values and keys can be scrollable
+//		mScroll = EditorGUILayout.BeginScrollView(mScroll);
+//
+//		//being the vertical view of the key and values
+//		GUILayout.BeginVertical();
+//		float columnWidth = (paneRectSize.width / 2.0f) - 20.0f;
+//		for(int i=0; i < mLanguages.keys.Count; ++i) 
+//		{
+//			GUILayout.BeginHorizontal( ((keySelected == i) ? "SelectionRect" : "HelpBox" ));
+//
+//			GUILayout.Label(mLanguages.keys[i], GUILayout.Width(columnWidth));
+//			GUILayout.Label(t.values[i].text, GUILayout.Width(columnWidth));
+//
+//			GUILayout.EndHorizontal();
+//			if (Event.current.clickCount == 1 && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+//			{
+//				keySelected = i;
+//			}
+//		}
+//		GUILayout.EndVertical();
+//		EditorGUILayout.EndScrollView();
+//		GUILayout.EndArea();
+	}
+
+	private void DoLanguageKeyValueEditor(Rect paneRectSize)
 	{
 		Assert.IsNotNull(mLanguages);
 
@@ -182,8 +247,12 @@ public class MultiLanguage : EditorWindow {
 //
 //			GUILayout.EndHorizontal();
 
+		GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
+
+		GUILayout.Space(20);
+
 		string key = string.Empty;
-		bool isValidKeySelected = mLanguages.keys.Count > keySelected;
+		bool isValidKeySelected = mLanguages.keys.Count > keySelected && keySelected >= 0;
 		if(isValidKeySelected) {
 			key = mLanguages.keys[keySelected];
 		}
@@ -194,6 +263,7 @@ public class MultiLanguage : EditorWindow {
 		string newKey = EditorGUILayout.TextField(key);
 		if(GUI.changed) {
 			mLanguages.RenameTextEntryKey(key, newKey);
+			m_listview.ReloadTree ();
 			EditorUtility.SetDirty(mLanguages);
 		}
 		GUILayout.EndHorizontal();
@@ -210,6 +280,7 @@ public class MultiLanguage : EditorWindow {
 		mTranslatedTextValue = EditorGUILayout.TextArea(mTranslatedTextValue, GUILayout.Height(80));
 		if(GUI.changed) {
 			mLanguages.SetTextEntry(mCurrentLanguage, key, mTranslatedTextValue);
+			m_listview.ReloadTree ();
 			EditorUtility.SetDirty(mLanguages);
 		}
 
@@ -218,13 +289,17 @@ public class MultiLanguage : EditorWindow {
 		GUILayout.EndVertical();
 
 		EditorGUILayout.Space();
+
+		GUILayout.EndArea();
 	}
 
 	//create the top menu bar
-	private void DoLanguageMenuBar ()
+	private void DoLanguageMenuBar (Rect menubarRect)
 	{
+		GUILayout.BeginArea(menubarRect, EditorStyles.toolbar);
+
 		//the menu bar 
-		GUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.Width(position.width));
+		GUILayout.BeginHorizontal();
 
 		//display the origin language selection
 		DoLanguageOriginPopup();
@@ -235,9 +310,8 @@ public class MultiLanguage : EditorWindow {
 
 		EditorGUILayout.Space();
 
+		//display the add key button in the toolbar
 		DoAddKey();
-
-		EditorGUILayout.Space();
 
 		//export the selected language
 		DoExportLanguageFileButton();
@@ -247,14 +321,28 @@ public class MultiLanguage : EditorWindow {
 
 		GUILayout.EndHorizontal();
 
+		GUILayout.EndArea();
 	}
 
 	public void DoAddKey()
 	{
+		
+		m_NewLanguageKey = EditorGUILayout.TextField("Key Name: ", m_NewLanguageKey, EditorStyles.toolbarTextField, GUILayout.Width(300));
+
 		if(GUILayout.Button("Add New Key", EditorStyles.toolbarButton, GUILayout.Width(80)))
 		{
 			//start exporting language File here
-		}	
+			mLanguages.AddTextEntry(m_NewLanguageKey.ToLower());
+			m_listview.ReloadTree ();
+			EditorUtility.SetDirty(mLanguages);
+
+			//clear the text box
+			m_NewLanguageKey = "";
+			//Debug.Log("Added New Key");
+		}
+
+
+
 	}
 
 	//exports the language translations to a .po file
@@ -280,7 +368,7 @@ public class MultiLanguage : EditorWindow {
 	public void DoLanguageOriginPopup()
 	{
 
-		GUILayout.Label("Origin: ", GUILayout.Width(60));
+		GUILayout.Label("Origin:", GUILayout.Width(60));
 
 		if(mLanguages == null)
 		{
@@ -312,7 +400,7 @@ public class MultiLanguage : EditorWindow {
 	public void DoLanguageSelectionPopup()
 	{
 
-		GUILayout.Label("Translated: ", GUILayout.Width(70));
+		GUILayout.Label("Translated:", GUILayout.Width(70));
 
 		if(mLanguages == null)
 		{
@@ -339,6 +427,14 @@ public class MultiLanguage : EditorWindow {
 		//select the language you want to display
 		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup, GUILayout.Width(100));
 		mCurrentLanguage = loadedLanguages[selectionIndex];
+	}
+
+	public void OnStringTableSelectionChanged(int[] selection) {
+		if(selection != null && selection.Length > 0) {
+			keySelected = selection[0];
+		} else {
+			keySelected = -1;
+		}	
 	}
 
 	public void DetectLanguageFileFromSelection ()
@@ -369,7 +465,8 @@ public class MultiLanguage : EditorWindow {
 			ResetEditorStatus();
 			mLanguages = selectedAsset;
 			if (m_listview != null) {
-				m_listview.InitSelection (true);
+				m_listview.OnM10NStringDatabaseChanged(selectedAsset);
+				//m_listview.InitSelection (true);
 			}
 		}
 	}
@@ -435,8 +532,8 @@ public class MultiLanguage : EditorWindow {
 	{
 		if (m_listview == null) {
 			Init ();
+		} else {
+			m_listview.ReloadTree ();
 		}
-
-		//m_listview.ReloadTree ();
 	}
 }
