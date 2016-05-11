@@ -27,9 +27,7 @@ public struct M10NStringReference {
 
 	public string text {
 		get {
-			//Assert.IsNotNull(m_db);
 			if(m_db == null || m_db.keys.Count < m_index || m_index < 0) return string.Empty;
-			//TODO: return appropriate text of current language
 			return m_db.GetStringTable(Application.currentLanguage).values[m_index].text;
 		}
 	}
@@ -45,6 +43,7 @@ public struct M10NStringReference {
 
 	public string key {
 		get {
+			if(m_db == null || m_db.keys.Count < m_index || m_index < 0) return string.Empty;
 			return m_db.keys[m_index];
 		}
 		set {
