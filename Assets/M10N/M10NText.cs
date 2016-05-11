@@ -99,4 +99,8 @@ public class M10NText : UnityEngine.UI.Text
 	public override float flexibleHeight { get { return -1; } }
 
 	public override int layoutPriority { get { return 0; } }
+
+	void OnLanguageChanged() {
+		SetVerticesDirty();
+	}
 }

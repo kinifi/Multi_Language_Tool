@@ -107,6 +107,9 @@ public class MultiLanguage : EditorWindow {
 	}
 
 	public void ResetEditorStatus() {
+
+		mCurrentLanguage = EditorSettings.editorPreviewLanguage;
+
 		m_NewLanguageKey = string.Empty;
 		m_NewLanguageValue = string.Empty;
 		loadedLanguages = null;
