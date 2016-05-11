@@ -116,6 +116,7 @@ public class MultiLanguage : EditorWindow {
 	{
 
         GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
+        
         GUILayout.Label("show comment here");
         
         
