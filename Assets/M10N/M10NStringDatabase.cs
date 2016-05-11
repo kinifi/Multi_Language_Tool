@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Assertions;
 
-[CreateAssetMenuAttribute( fileName = "Languages", menuName = "Multi-Language/Languages", order = 1000)]
+[CreateAssetMenuAttribute( fileName = "Languages", menuName = "Multi-Language/Language", order = 1000)]
 public class M10NStringDatabase : ScriptableObject {
 
 	// 

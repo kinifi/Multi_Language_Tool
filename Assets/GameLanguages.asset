@@ -14,7 +14,7 @@ MonoBehaviour:
   keys:
   - gametitle
   - playButton
-  - test
+  - score
   - 
   m_database:
   - language: 0
@@ -133,7 +133,7 @@ MonoBehaviour:
       m_pluralValues: []
     - m_value: PLAY
       m_pluralValues: []
-    - m_value: test
+    - m_value: Score
       m_pluralValues: []
     - m_value: 
       m_pluralValues: []
@@ -265,7 +265,7 @@ MonoBehaviour:
       m_pluralValues: []
     - m_value: PURAY
       m_pluralValues: []
-    - m_value: 
+    - m_value: test
       m_pluralValues: []
     - m_value: 
       m_pluralValues: []
