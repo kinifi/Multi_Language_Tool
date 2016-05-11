@@ -13,6 +13,7 @@ public class MultiLanguage : EditorWindow {
 
 	//currently editing Language
 	public SystemLanguage mCurrentLanguage;
+	public SystemLanguage mCurrentReferenceLanguage;
 
 	//new language key and values to edit
 	private string m_NewLanguageKey;
@@ -23,8 +24,8 @@ public class MultiLanguage : EditorWindow {
 
 	private Vector2 mScroll;
 
-	private string mOriginTextValue;
-	private string mTranslatedTextValue;
+	private string mReferenceTextValue;
+	private string mTextValue;
 
 	private int keySelected;
 
@@ -113,8 +114,8 @@ public class MultiLanguage : EditorWindow {
 
 		mScroll = Vector2.zero;
 
-		mOriginTextValue = string.Empty;
-		mTranslatedTextValue = string.Empty;
+		mReferenceTextValue = string.Empty;
+		mTextValue = string.Empty;
 
 		keySelected = -1;
 	}
@@ -167,13 +168,16 @@ public class MultiLanguage : EditorWindow {
 //			Rect leftPaneRect_listview = new Rect(0, s_Styles.kToolbarHeight, editorWidth, position.height- s_Styles.kEditorPaneHeight - s_Styles.kToolbarHeight);
 //			Rect leftPaneRect_editorview = new Rect(0, leftPaneRect_listview.y + leftPaneRect_listview.height, editorWidth, s_Styles.kEditorPaneHeight);
 //			Rect rightPaneRect = new Rect(editorWidth, s_Styles.kToolbarHeight, commentWidth, position.height - s_Styles.kToolbarHeight);
-			Rect leftPaneRect_listview = new Rect(0, s_Styles.kToolbarHeight, editorWidth, listViewHeight);
-			Rect leftPaneRect_editorview = new Rect(0, leftPaneRect_listview.height, editorWidth, editorHeight);
+			Rect leftPaneRect_listview = new Rect(0, s_Styles.kToolbarHeight, editorWidth, listViewHeight - s_Styles.kToolbarHeight);
+			Rect leftPaneRect_editorview = new Rect(0, leftPaneRect_listview.height + s_Styles.kToolbarHeight, editorWidth, editorHeight);
 
 			Rect rightPaneRect = new Rect(editorWidth, s_Styles.kToolbarHeight, commentWidth, position.height - s_Styles.kToolbarHeight);
 
+
 			//display keys and values
 			DoLanguageKeyValueListView(leftPaneRect_listview);
+
+			//EditorGUI.DrawRect(leftPaneRect_listview, Color.yellow);
 
 			//display edit field
 			DoLanguageKeyValueEditor(leftPaneRect_editorview);
@@ -211,61 +215,14 @@ public class MultiLanguage : EditorWindow {
 	{
 		Assert.IsNotNull(mLanguages);
 
-//        GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
-
 		if (m_StringTableListView != null) {
 			m_StringTableListView.OnGUI(paneRectSize);
 		}
-
-//		M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
-//
-//		// //create the box that shows the Titles Key & Values			
-//		// GUILayout.BeginHorizontal("HelpBox");
-//		// GUILayout.Label("Key");
-//		// GUILayout.Label("Value");
-//		// GUILayout.EndHorizontal();
-//		// //end of box that shows titles
-//
-//		//start the scroll box here so values and keys can be scrollable
-//		mScroll = EditorGUILayout.BeginScrollView(mScroll);
-//
-//		//being the vertical view of the key and values
-//		GUILayout.BeginVertical();
-//		float columnWidth = (paneRectSize.width / 2.0f) - 20.0f;
-//		for(int i=0; i < mLanguages.keys.Count; ++i) 
-//		{
-//			GUILayout.BeginHorizontal( ((keySelected == i) ? "SelectionRect" : "HelpBox" ));
-//
-//			GUILayout.Label(mLanguages.keys[i], GUILayout.Width(columnWidth));
-//			GUILayout.Label(t.values[i].text, GUILayout.Width(columnWidth));
-//
-//			GUILayout.EndHorizontal();
-//			if (Event.current.clickCount == 1 && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
-//			{
-//				keySelected = i;
-//			}
-//		}
-//		GUILayout.EndVertical();
-//		EditorGUILayout.EndScrollView();
-//		GUILayout.EndArea();
 	}
 
 	private void DoLanguageKeyValueEditor(Rect paneRectSize)
 	{
 		Assert.IsNotNull(mLanguages);
-
-//			GUILayout.BeginHorizontal("HelpBox");
-//			m_NewLanguageKey = EditorGUILayout.TextField("Key: ", m_NewLanguageKey);
-//			m_NewLanguageValue = EditorGUILayout.TextField("Value: ", m_NewLanguageValue);
-//
-//			//add the language you have selected
-//			if(GUILayout.Button("Add"))
-//			{
-//				mLanguages.SetTextEntry(mCurrentLanguage, m_NewLanguageKey.ToLower(), m_NewLanguageValue);
-//				EditorUtility.SetDirty(mLanguages);
-//			}
-//
-//			GUILayout.EndHorizontal();
 
 		GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
 
@@ -275,6 +232,8 @@ public class MultiLanguage : EditorWindow {
 		bool isValidKeySelected = mLanguages.keys.Count > keySelected && keySelected >= 0;
 		if(isValidKeySelected) {
 			key = mLanguages.keys[keySelected];
+			mReferenceTextValue = mLanguages.GetStringTable(mCurrentReferenceLanguage).values[keySelected].text;
+			mTextValue = mLanguages.GetStringTable(mCurrentLanguage).values[keySelected].text;
 		}
 
 		GUILayout.BeginHorizontal();
@@ -289,17 +248,18 @@ public class MultiLanguage : EditorWindow {
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginVertical();
-		GUILayout.Label("Source Text", EditorStyles.boldLabel);
-		mOriginTextValue = EditorGUILayout.TextArea(mOriginTextValue, GUILayout.Height(80));
+		GUILayout.Label("Reference Text", EditorStyles.boldLabel);
 
-		GUILayout.Label("Translated Text", EditorStyles.boldLabel);
-		if(isValidKeySelected) {
-			mTranslatedTextValue = mLanguages.GetStringTable(mCurrentLanguage).values[keySelected].text;
+		using (new EditorGUI.DisabledScope(true)) {
+			mReferenceTextValue = EditorGUILayout.TextArea(mReferenceTextValue, GUILayout.Height(80));
 		}
+
+		GUILayout.Label("Text", EditorStyles.boldLabel);
+
 		GUI.changed = false;
-		mTranslatedTextValue = EditorGUILayout.TextArea(mTranslatedTextValue, GUILayout.Height(80));
+		mTextValue = EditorGUILayout.TextArea(mTextValue, GUILayout.Height(80));
 		if(GUI.changed) {
-			mLanguages.SetTextEntry(mCurrentLanguage, key, mTranslatedTextValue);
+			mLanguages.SetTextEntry(mCurrentLanguage, key, mTextValue);
 			m_StringTableListView.ReloadTree ();
 			EditorUtility.SetDirty(mLanguages);
 		}
@@ -320,10 +280,10 @@ public class MultiLanguage : EditorWindow {
 		GUILayout.BeginHorizontal();
 
 		//display the origin language selection
-		DoLanguageOriginPopup();
+		DoLanguagePopup();
 
 		//select the language you want to display
-		DoLanguageSelectionPopup();
+		DoReferenceLanguagePopup();
 		//Debug.Log(currentLoadedLanguageListSelection);
 
 		EditorGUILayout.Space();
@@ -383,11 +343,8 @@ public class MultiLanguage : EditorWindow {
 
 	}
 
-	public void DoLanguageOriginPopup()
+	public void DoLanguagePopup()
 	{
-
-		GUILayout.Label("Origin:", GUILayout.Width(60));
-
 		if(mLanguages == null)
 		{
 			string[] nodata = {""};
@@ -413,12 +370,12 @@ public class MultiLanguage : EditorWindow {
 		//select the language you want to display
 		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup, GUILayout.Width(100));
 		mCurrentLanguage = loadedLanguages[selectionIndex];
+		m_StringTableListView.OnEditingLanguageChanged(mCurrentLanguage);
 	}
 
-	public void DoLanguageSelectionPopup()
+	public void DoReferenceLanguagePopup()
 	{
-
-		GUILayout.Label("Translated:", GUILayout.Width(70));
+		GUILayout.Label("Reference:", GUILayout.Width(70));
 
 		if(mLanguages == null)
 		{
@@ -437,14 +394,14 @@ public class MultiLanguage : EditorWindow {
 
 		int selectionIndex = 0;
 		for(int i = 0; i < loadedLanguages.Length; ++i) {
-			if(loadedLanguages[i] == mCurrentLanguage) {
+			if(loadedLanguages[i] == mCurrentReferenceLanguage) {
 				selectionIndex = i;
 			}
 		}
 
 		//select the language you want to display
 		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup, GUILayout.Width(100));
-		mCurrentLanguage = loadedLanguages[selectionIndex];
+		mCurrentReferenceLanguage = loadedLanguages[selectionIndex];
 	}
 
 	public void OnStringTableSelectionChanged(int[] selection) {
@@ -484,7 +441,6 @@ public class MultiLanguage : EditorWindow {
 		{
 			ResetEditorStatus();
 			mLanguages = selectedAsset;
-			Debug.Log("SelectionItem changed to:" + focusKey);
 			if (m_StringTableListView != null) {
 				m_StringTableListView.OnM10NStringDatabaseChanged(selectedAsset);
 				//m_StringTableListView.InitSelection (true);

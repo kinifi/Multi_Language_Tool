@@ -105,12 +105,12 @@ public class M10NStringTableDataSource : TreeViewDataSource
 
 	private void AddAllNodes()
 	{
-		var newRoot = new TreeViewItem(-1, 0, null, "Root");
+		var newRoot = new TreeViewItem(-1, -1, null, "Root");
 		for (int i = 0; i < m_db.keys.Count; ++i)
 		{
 //			Debug.Log("[M10N LV]added child " + i + ":" + m_db.keys[i]);
 			//int uniqueNodeID = GetUniqueNodeID();
-			var node = new M10NStringTableListViewNode(i, 1, m_RootItem, m_db.keys[i], i);
+			var node = new M10NStringTableListViewNode(i, 0, m_RootItem, m_db.keys[i], i);
 			newRoot.AddChild(node);
 		}
 
@@ -151,16 +151,18 @@ public class M10NStringTableDataSource : TreeViewDataSource
 
 public class M10NStringTableListViewGUI : TreeViewGUI
 {
-	readonly float column1Width = 20f;
+	readonly float column1Width = 0f;
 	readonly Texture2D k_VisibleON = EditorGUIUtility.FindTexture ("VisibilityOn");
 
 	//public Action<M10NStringTableListViewNode, bool> NodeWasToggled;
 	//public AudioMixerController m_Controller = null;
 	public M10NStringDatabase m_db;
+	public SystemLanguage currentEditingLanguage;
 
-	public M10NStringTableListViewGUI(TreeView treeView)
+	public M10NStringTableListViewGUI(TreeView treeView, M10NStringDatabase db)
 		: base(treeView)
 	{
+		m_db = db;
 		k_BaseIndent = column1Width;
 		k_IconWidth = 0;
 		k_TopRowMargin = k_BottomRowMargin = 2f;
@@ -186,60 +188,39 @@ public class M10NStringTableListViewGUI : TreeViewGUI
 //		menu.ShowAsContext ();
 //	}
 
-	override public void OnRowGUI (Rect rowRect, TreeViewItem node, int row, bool selected, bool focused)
+	protected override void DrawIconAndLabel (Rect rect, TreeViewItem item, string label, bool selected, bool focused, bool useBoldFont, bool isPinging)
 	{
-		Event evt = Event.current;
-		DoItemGUI(rowRect, row, node, selected, focused, false);
+		Rect keyRect = rect;
+		Rect valueRect = rect;
+		keyRect.xMax = rect.width / 2.0f;
+		valueRect.xMin += rect.width / 2.0f;
 
-		if (m_db == null)
-			return;
+		base.DrawIconAndLabel (keyRect, item, label, selected, focused, useBoldFont, isPinging);
 
-		var stringTable = node as M10NStringTableListViewNode;
-		if (stringTable != null)
+		var stringTable = item as M10NStringTableListViewNode;
+		if (stringTable != null && m_db != null)
 		{
-			//GUI.Label(rowRect, "Hoge Table " + stringTable.stringTableIndex);
-
-
-////			bool oldSelected = m_Controller.CurrentViewContainsGroup (audioNode.group.groupID);
-//			const float kIconSize = 16f;
-//
-////			float xMargin = 3f;
-////			Rect iconRect = new Rect(rowRect.x + xMargin, rowRect.y, kIconSize, kIconSize);
-////			Rect iconBgRect = new Rect(iconRect.x + 1, iconRect.y + 1, iconRect.width - 2, iconRect.height - 2);
-//
-////			int colorIndex = audioNode.group.userColorIndex;
-//			EditorGUI.DrawRect(new Rect(rowRect.x, iconBgRect.y, 2, iconBgRect.height), Color.gray);
-////			if (colorIndex > 0)
-//
-//			EditorGUI.DrawRect (iconBgRect, new Color (0.5f, 0.5f, 0.5f, 0.2f));
-//			if (oldSelected)
-//				GUI.DrawTexture (iconRect, k_VisibleON);
-//
-////			Rect toggleRect = new Rect(2, rowRect.y, rowRect.height, rowRect.height);
-////			if (evt.type == EventType.MouseUp && evt.button == 0 && toggleRect.Contains (evt.mousePosition))
-////			{
-////				if (NodeWasToggled != null)
-////					NodeWasToggled(audioNode, !oldSelected);
-////			}
-//
-////			if (evt.type == EventType.ContextClick && iconRect.Contains (evt.mousePosition))
-////			{
-////				OpenGroupContextMenu (audioNode, oldSelected);
-////				evt.Use ();
-////			}
+			string valueString = m_db.GetStringTable(currentEditingLanguage).values[stringTable.stringTableIndex].text;
+			GUI.Label(valueRect, valueString);
 		}
 	}
 
-	protected override Texture GetIconForItem(TreeViewItem node)
-	{
-		if (node != null && node.icon != null)
-			return node.icon;
-		return null;
-	}
+//	override public void OnRowGUI (Rect rowRect, TreeViewItem node, int row, bool selected, bool focused)
+//	{
+//		Event evt = Event.current;
+//		DoItemGUI(rowRect, row, node, selected, focused, false);
+//	}
+//
+//	protected override Texture GetIconForItem(TreeViewItem node)
+//	{
+//		if (node != null && node.icon != null)
+//			return node.icon;
+//		return null;
+//	}
 
-	protected override void SyncFakeItem()
-	{
-	}
+//	protected override void SyncFakeItem()
+//	{
+//	}
 
 	protected override void RenameEnded()
 	{
@@ -293,7 +274,7 @@ public class M10NStringTableListView
 	private TreeViewState m_StringTableTreeState;
 	private TreeView m_StringTableTree;
 	private int m_TreeViewKeyboardControlID;
-	private M10NStringTableListViewGUI m_TreeViewGUI;
+	private M10NStringTableListViewGUI m_StringTableListViewGUI;
 	private int m_ScrollToItem;
 
 	class Styles
@@ -317,15 +298,16 @@ public class M10NStringTableListView
 //		m_StringTableTree.contextClickItemCallback += OnTreeViewContextClick;
 //		m_StringTableTree.expandedStateChanged += SaveExpandedState;
 		
-		m_TreeViewGUI = new M10NStringTableListViewGUI(m_StringTableTree);
-//		m_TreeViewGUI.NodeWasToggled += OnNodeToggled;
+		m_StringTableListViewGUI = new M10NStringTableListViewGUI(m_StringTableTree, m_db);
+//		m_StringTableListViewGUI.NodeWasToggled += OnNodeToggled;
 
 		m_StringTableDataSource = new M10NStringTableDataSource(m_StringTableTree, m_db);
 		m_StringTableTree.Init(editorWindow.position,
-			m_StringTableDataSource, m_TreeViewGUI,
+			m_StringTableDataSource, m_StringTableListViewGUI,
 			//new AudioGroupTreeViewDragging(m_AudioGroupTree, this)
 			null // no dragging allowed
 			);
+		m_StringTableDataSource.showRootItem = false;
 		m_StringTableTree.ReloadData();
 	}
 
@@ -555,6 +537,10 @@ public class M10NStringTableListView
 		//UnityEditor.InspectorWindow.RepaintAllInspectors();
 	}
 
+	public void OnEditingLanguageChanged(SystemLanguage lang) {
+		m_StringTableListViewGUI.currentEditingLanguage = lang;
+	}
+
 	public void InitSelection (bool revealSelectionAndFrameLastSelected)
 	{
 		if (m_db == null) {
@@ -664,7 +650,7 @@ public class M10NStringTableListView
 	{
 		if (m_db != db)
 		{
-			m_TreeViewGUI.m_db = db;
+			m_StringTableListViewGUI.m_db = db;
 			m_db = db;
 			m_StringTableDataSource.database = db;
 			if (db != null)
