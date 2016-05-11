@@ -261,6 +261,11 @@ public class MultiLanguage : EditorWindow {
 		if(GUI.changed) {
 			mLanguages.SetTextEntry(mCurrentLanguage, key, mTextValue);
 			m_StringTableListView.ReloadTree ();
+			InspectorWindow.RepaintAllInspectors();
+			M10NText[] texts = FindObjectsOfType(typeof(M10NText)) as M10NText[];
+			foreach(M10NText t in texts) {
+				t.SetVerticesDirty();
+			}
 			EditorUtility.SetDirty(mLanguages);
 		}
 			
