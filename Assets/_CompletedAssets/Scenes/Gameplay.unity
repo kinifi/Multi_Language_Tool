@@ -179,8 +179,8 @@ GameObject:
   m_Component:
   - 224: {fileID: 28357258}
   - 222: {fileID: 28357260}
-  - 114: {fileID: 28357259}
   - 114: {fileID: 28357261}
+  - 114: {fileID: 28357259}
   m_Layer: 5
   m_Name: PausedText
   m_TagString: Untagged
@@ -203,8 +203,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -30}
-  m_SizeDelta: {x: 130, y: 30}
+  m_AnchoredPosition: {x: 0, y: -18}
+  m_SizeDelta: {x: 196, y: 71}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &28357259
 MonoBehaviour:
@@ -214,7 +214,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 28357257}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 40589fc7bc2c1426a9b682a71de823fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -230,15 +230,19 @@ MonoBehaviour:
     m_FontSize: 50
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 5
     m_MaxSize: 50
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
-    m_VerticalOverflow: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: PAUSED
+  m_Text: 
+  m_reference:
+    m_db: {fileID: 11400000, guid: e480dd65ac165459a8139788487976d4, type: 2}
+    m_index: 4
+    m_selectedKey: pauseText
 --- !u!222 &28357260
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -779,8 +783,8 @@ GameObject:
   m_Component:
   - 224: {fileID: 325982113}
   - 222: {fileID: 325982115}
-  - 114: {fileID: 325982114}
   - 114: {fileID: 325982116}
+  - 114: {fileID: 325982114}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -814,7 +818,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 325982112}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 40589fc7bc2c1426a9b682a71de823fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -830,7 +834,7 @@ MonoBehaviour:
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -838,7 +842,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: QUIT GAME
+  m_Text: 
+  m_reference:
+    m_db: {fileID: 11400000, guid: e480dd65ac165459a8139788487976d4, type: 2}
+    m_index: 5
+    m_selectedKey: quit
 --- !u!222 &325982115
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -896,8 +904,8 @@ GameObject:
   m_Component:
   - 224: {fileID: 385205436}
   - 222: {fileID: 385205438}
-  - 114: {fileID: 385205437}
   - 114: {fileID: 385205439}
+  - 114: {fileID: 385205437}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -920,8 +928,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 30}
-  m_SizeDelta: {x: 130, y: 30}
+  m_AnchoredPosition: {x: -12, y: 36}
+  m_SizeDelta: {x: 155, y: 36}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &385205437
 MonoBehaviour:
@@ -931,7 +939,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 385205435}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 40589fc7bc2c1426a9b682a71de823fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -947,15 +955,19 @@ MonoBehaviour:
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
-    m_VerticalOverflow: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: EFFECTS VOLUME
+  m_Text: 
+  m_reference:
+    m_db: {fileID: 11400000, guid: e480dd65ac165459a8139788487976d4, type: 2}
+    m_index: 8
+    m_selectedKey: effectsvolume
 --- !u!222 &385205438
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2066,8 +2078,8 @@ GameObject:
   m_Component:
   - 224: {fileID: 1038376790}
   - 222: {fileID: 1038376793}
-  - 114: {fileID: 1038376792}
   - 114: {fileID: 1038376791}
+  - 114: {fileID: 1038376792}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -2115,7 +2127,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1038376789}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 40589fc7bc2c1426a9b682a71de823fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -2131,7 +2143,7 @@ MonoBehaviour:
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -2139,7 +2151,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: RESUME
+  m_Text: 
+  m_reference:
+    m_db: {fileID: 11400000, guid: e480dd65ac165459a8139788487976d4, type: 2}
+    m_index: 6
+    m_selectedKey: resume
 --- !u!222 &1038376793
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2184,11 +2200,11 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 46238fb1ad7a7a84ba8954c1c860994c, type: 3}
-    m_FontSize: 50
+    m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 5
-    m_MaxSize: 50
+    m_MaxSize: 80
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2221,8 +2237,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 130, y: 50}
+  m_AnchoredPosition: {x: 0, y: -9}
+  m_SizeDelta: {x: 605, y: 184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1139190131
 GameObject:
@@ -2623,8 +2639,8 @@ GameObject:
   m_Component:
   - 224: {fileID: 1409714686}
   - 222: {fileID: 1409714688}
-  - 114: {fileID: 1409714687}
   - 114: {fileID: 1409714689}
+  - 114: {fileID: 1409714687}
   m_Layer: 5
   m_Name: Label
   m_TagString: Untagged
@@ -2658,7 +2674,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1409714685}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 40589fc7bc2c1426a9b682a71de823fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -2671,18 +2687,22 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 46238fb1ad7a7a84ba8954c1c860994c, type: 3}
-    m_FontSize: 19
+    m_FontSize: 18
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
-    m_VerticalOverflow: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: SOUND ON/OFF
+  m_Text: 
+  m_reference:
+    m_db: {fileID: 11400000, guid: e480dd65ac165459a8139788487976d4, type: 2}
+    m_index: 7
+    m_selectedKey: soundtext
 --- !u!222 &1409714688
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3634,8 +3654,8 @@ GameObject:
   m_Component:
   - 224: {fileID: 1859424392}
   - 222: {fileID: 1859424394}
-  - 114: {fileID: 1859424393}
   - 114: {fileID: 1859424395}
+  - 114: {fileID: 1859424393}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -3659,7 +3679,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 30}
-  m_SizeDelta: {x: 130, y: 30}
+  m_SizeDelta: {x: 161, y: 30}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1859424393
 MonoBehaviour:
@@ -3669,7 +3689,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1859424391}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 40589fc7bc2c1426a9b682a71de823fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -3685,15 +3705,19 @@ MonoBehaviour:
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
-    m_VerticalOverflow: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: MUSIC VOLUME
+  m_Text: 
+  m_reference:
+    m_db: {fileID: 11400000, guid: e480dd65ac165459a8139788487976d4, type: 2}
+    m_index: 9
+    m_selectedKey: musicvolume
 --- !u!222 &1859424394
 CanvasRenderer:
   m_ObjectHideFlags: 0
