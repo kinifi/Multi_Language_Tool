@@ -193,9 +193,16 @@ public class MultiLanguage : EditorWindow {
 		//the menu bar 
 		GUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.Width(position.width));
 
+		//display the origin language selection
+		DoLanguageOriginPopup();
+
 		//select the language you want to display
 		DoLanguageSelectionPopup();
 		//Debug.Log(currentLoadedLanguageListSelection);
+
+		EditorGUILayout.Space();
+
+		DoAddKey();
 
 		EditorGUILayout.Space();
 
@@ -209,26 +216,39 @@ public class MultiLanguage : EditorWindow {
 
 	}
 
+	public void DoAddKey()
+	{
+		if(GUILayout.Button("Add New Key", EditorStyles.toolbarButton, GUILayout.Width(80)))
+		{
+			//start exporting language File here
+		}	
+	}
+
+	//exports the language translations to a .po file
 	public void DoExportLanguageFileButton ()
 	{
-		if(GUILayout.Button("Export Language", EditorStyles.toolbarButton, GUILayout.Width(100)))
+		if(GUILayout.Button("Export", EditorStyles.toolbarButton, GUILayout.Width(50)))
 		{
 			//start exporting language File here
 		}
 
 	}
 
+	//opens up a file selection for a .po file to import
 	public void DoImportLanguageFileButton()
 	{
-		if(GUILayout.Button("Import Language", EditorStyles.toolbarButton, GUILayout.Width(100)))
+		if(GUILayout.Button("Import", EditorStyles.toolbarButton, GUILayout.Width(50)))
 		{
 			//start exporting language File here
 		}
 
 	}
 
-	public void DoLanguageSelectionPopup()
+	public void DoLanguageOriginPopup()
 	{
+
+		GUILayout.Label("Origin: ", GUILayout.Width(60));
+
 		if(mLanguages == null)
 		{
 			string[] nodata = {""};
@@ -252,7 +272,39 @@ public class MultiLanguage : EditorWindow {
 		}
 
 		//select the language you want to display
-		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup, GUILayout.Width(250));
+		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup, GUILayout.Width(100));
+		mCurrentLanguage = loadedLanguages[selectionIndex];
+	}
+
+	public void DoLanguageSelectionPopup()
+	{
+
+		GUILayout.Label("Translated: ", GUILayout.Width(70));
+
+		if(mLanguages == null)
+		{
+			string[] nodata = {""};
+			EditorGUILayout.Popup(0, nodata, EditorStyles.toolbarPopup);
+			return;
+		}
+
+		if( loadedLanguages == null || loadedLanguages.Length != mLanguages.languageCount ) {
+			loadedLanguages = mLanguages.languages;
+			loadedLanguagesString = new string[loadedLanguages.Length];
+			for(int i = 0; i < loadedLanguages.Length; ++i) {
+				loadedLanguagesString[i] = loadedLanguages[i].ToString();
+			}
+		}
+
+		int selectionIndex = 0;
+		for(int i = 0; i < loadedLanguages.Length; ++i) {
+			if(loadedLanguages[i] == mCurrentLanguage) {
+				selectionIndex = i;
+			}
+		}
+
+		//select the language you want to display
+		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup, GUILayout.Width(100));
 		mCurrentLanguage = loadedLanguages[selectionIndex];
 	}
 

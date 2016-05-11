@@ -5,13 +5,21 @@ using UnityEditor;
 [CustomEditor(typeof(M10NStringDatabase))]
 public class M10NStringDatabaseEditor : Editor 
 {
+
+	private bool showDebugData = false;
+
     public override void OnInspectorGUI()
     {
 
         M10NStringDatabase db = target as M10NStringDatabase;
         
-        EditorGUILayout.LabelField("You don't wanna know...");
+        
+        
+        showDebugData = EditorGUILayout.Toggle("Show Debug Data", showDebugData);
 
-		DrawDefaultInspector();
+        if(showDebugData == true)
+        {
+			DrawDefaultInspector();
+		}
     }
 }
