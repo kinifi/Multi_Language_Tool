@@ -240,8 +240,6 @@ public class MultiLanguage : EditorWindow {
 		//display the add key button in the toolbar
 		DoAddKey();
 
-		EditorGUILayout.Space();
-
 		//export the selected language
 		DoExportLanguageFileButton();
 		
@@ -254,10 +252,21 @@ public class MultiLanguage : EditorWindow {
 
 	public void DoAddKey()
 	{
+		
+		m_NewLanguageKey = EditorGUILayout.TextField("Key Name: ", m_NewLanguageKey, EditorStyles.toolbarTextField, GUILayout.Width(300));
+
 		if(GUILayout.Button("Add New Key", EditorStyles.toolbarButton, GUILayout.Width(80)))
 		{
 			//start exporting language File here
-		}	
+			mLanguages.AddTextEntry(m_NewLanguageKey.ToLower());
+			
+			//clear the text box
+			m_NewLanguageKey = "";
+			//Debug.Log("Added New Key");
+		}
+
+
+
 	}
 
 	//exports the language translations to a .po file
@@ -283,7 +292,7 @@ public class MultiLanguage : EditorWindow {
 	public void DoLanguageOriginPopup()
 	{
 
-		GUILayout.Label("Origin: ", GUILayout.Width(60));
+		GUILayout.Label("Origin:", GUILayout.Width(60));
 
 		if(mLanguages == null)
 		{
@@ -315,7 +324,7 @@ public class MultiLanguage : EditorWindow {
 	public void DoLanguageSelectionPopup()
 	{
 
-		GUILayout.Label("Translated: ", GUILayout.Width(70));
+		GUILayout.Label("Translated:", GUILayout.Width(70));
 
 		if(mLanguages == null)
 		{

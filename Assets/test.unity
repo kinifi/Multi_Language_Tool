@@ -325,8 +325,8 @@ MonoBehaviour:
   m_Text: 
   m_reference:
     m_db: {fileID: 11400000, guid: 3a0cf35cef081454da2ed0575872164f, type: 2}
-    m_index: 11
-    m_selectedKey: HELLO123
+    m_index: 3
+    m_selectedKey: hello
 --- !u!222 &200666441
 CanvasRenderer:
   m_ObjectHideFlags: 0
