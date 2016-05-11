@@ -284,8 +284,6 @@ public class MultiLanguage : EditorWindow {
 			EditorUtility.SetDirty(mLanguages);
 		}
 
-		GUILayout.Label("Comments from the .po files will go here");
-
 		GUILayout.EndVertical();
 
 		EditorGUILayout.Space();
