@@ -53,7 +53,7 @@ public class M10NTextEditor : UnityEditor.UI.GraphicEditor
 		EditorGUILayout.EndHorizontal();
 		if(keyMissing) {
 			EditorGUILayout.LabelField("Key was:" + m_M10NSelectedKey.stringValue);
-			if(GUILayout.Button("Fix it")) {
+			if(GUILayout.Button("Add key to current database")) {
 				db.AddTextEntry(m_M10NSelectedKey.stringValue);
 				m_M10NIndex.intValue = db.keys.IndexOf(m_M10NSelectedKey.stringValue);
 				EditorUtility.SetDirty(db);
