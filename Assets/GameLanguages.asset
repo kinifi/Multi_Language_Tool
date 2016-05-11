@@ -441,11 +441,11 @@ MonoBehaviour:
     isEditing: 0
   - language: 22
     values:
-    - m_value: NAITOMEA SHUTAA
+    - m_value: "\u30CA\u30A4\u30C8\u30E1\u30A2\u30B7\u30E5\u30FC\u30BF\u30FC"
       m_pluralValues: []
-    - m_value: PURAY
+    - m_value: "\u30D7\u30EC\u30A4"
       m_pluralValues: []
-    - m_value: test
+    - m_value: "\u30B9\u30B3\u30A2"
       m_pluralValues: []
     - m_value: 
       m_pluralValues: []

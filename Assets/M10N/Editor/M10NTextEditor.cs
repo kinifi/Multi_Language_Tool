@@ -49,6 +49,7 @@ public class M10NTextEditor : UnityEditor.UI.GraphicEditor
 			if(GUI.changed) {
 				m_M10NSelectedKey.stringValue = db.keys[m_M10NIndex.intValue];
 				MultiLanguage.SelectItemForKey(m_M10NSelectedKey.stringValue);
+				//SceneView.RepaintAll();
 			}
 		}
 		EditorGUILayout.EndHorizontal();
