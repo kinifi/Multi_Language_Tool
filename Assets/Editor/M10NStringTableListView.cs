@@ -349,6 +349,15 @@ public class M10NStringTableListView
 //		}
 	}
 
+	public void SelectItemForKey(string key) {
+		if( m_db ) {
+			int[] sel = new int[1];
+			sel[0] = m_db.keys.IndexOf(key);
+			m_StringTableTree.SetSelection(sel, true, true);
+			m_StringTableTree.NotifyListenersThatSelectionChanged();
+		}
+	}
+
 //	public void AddChildGroupPopupCallback(object obj)
 //	{
 //		AudioMixerGroupPopupContext context = (AudioMixerGroupPopupContext)obj;

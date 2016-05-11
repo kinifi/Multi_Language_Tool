@@ -32,7 +32,7 @@ public class MultiLanguage : EditorWindow {
 	private SplitterState mVerticalSplitterState;
 
 	private TreeViewState m_stringTableListViewState;
-	private M10NStringTableListView m_listview;
+	private M10NStringTableListView m_StringTableListView;
 
 	private bool m_isInitialized;
 
@@ -60,9 +60,26 @@ public class MultiLanguage : EditorWindow {
 		editor.Repaint();
 	}
 
+	public static void SelectItemForKey(string key) {
+		MultiLanguage editor = EditorWindow.GetWindow<MultiLanguage>();
+		editor.DetectLanguageFileFromSelection ();
+		editor._SelectItemForKey(key);
+		editor.Repaint();
+	}
+
+	private void _SelectItemForKey(string key) {
+		if (m_StringTableListView != null) {
+			m_StringTableListView.SelectItemForKey(key);
+		}
+	}
+
 	// Use this for initialization
 	public void Init() 
 	{
+		if( m_stringTableListViewState == null || m_StringTableListView == null ) {
+			m_isInitialized = false;
+		}
+
 		if(m_isInitialized) {
 			return;
 		}
@@ -71,12 +88,17 @@ public class MultiLanguage : EditorWindow {
 			m_stringTableListViewState = new TreeViewState();
 		}
 
-		if( m_listview == null ) {
-			m_listview = new M10NStringTableListView(this, m_stringTableListViewState, mLanguages);
+		if( m_StringTableListView == null ) {
+			m_StringTableListView = new M10NStringTableListView(this, m_stringTableListViewState, mLanguages);
 		}
 
-		mHorizontalSplitterState = new SplitterState(new int[] { 200, 100 }, null, null);
-		mVerticalSplitterState = new SplitterState(new int[] { 200, 100 }, null, null);
+		if( mHorizontalSplitterState == null ) {
+			mHorizontalSplitterState = new SplitterState(new int[] { 200, 100 }, null, null);
+		}
+
+		if( mVerticalSplitterState == null ) {
+			mVerticalSplitterState = new SplitterState(new int[] { 200, 100 }, null, null);
+		}
 
 		ResetEditorStatus();
 
@@ -175,8 +197,6 @@ public class MultiLanguage : EditorWindow {
 	private void DoRightSideView(Rect paneRectSize)
 	{
 		Assert.IsNotNull(mLanguages);
-//		m_listview.UseScrollView(true);
-//		m_listview.OnGUI (sectionRect);
 
         GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
         
@@ -193,8 +213,8 @@ public class MultiLanguage : EditorWindow {
 
 //        GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
 
-		if (m_listview != null) {
-			m_listview.OnGUI(paneRectSize);
+		if (m_StringTableListView != null) {
+			m_StringTableListView.OnGUI(paneRectSize);
 		}
 
 //		M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
@@ -263,7 +283,7 @@ public class MultiLanguage : EditorWindow {
 		string newKey = EditorGUILayout.TextField(key);
 		if(GUI.changed) {
 			mLanguages.RenameTextEntryKey(key, newKey);
-			m_listview.ReloadTree ();
+			m_StringTableListView.ReloadTree ();
 			EditorUtility.SetDirty(mLanguages);
 		}
 		GUILayout.EndHorizontal();
@@ -280,10 +300,10 @@ public class MultiLanguage : EditorWindow {
 		mTranslatedTextValue = EditorGUILayout.TextArea(mTranslatedTextValue, GUILayout.Height(80));
 		if(GUI.changed) {
 			mLanguages.SetTextEntry(mCurrentLanguage, key, mTranslatedTextValue);
-			m_listview.ReloadTree ();
+			m_StringTableListView.ReloadTree ();
 			EditorUtility.SetDirty(mLanguages);
 		}
-
+			
 		GUILayout.EndVertical();
 
 		EditorGUILayout.Space();
@@ -331,7 +351,7 @@ public class MultiLanguage : EditorWindow {
 		{
 			//start exporting language File here
 			mLanguages.AddTextEntry(m_NewLanguageKey.ToLower());
-			m_listview.ReloadTree ();
+			m_StringTableListView.ReloadTree ();
 			EditorUtility.SetDirty(mLanguages);
 
 			//clear the text box
@@ -438,6 +458,7 @@ public class MultiLanguage : EditorWindow {
 	public void DetectLanguageFileFromSelection ()
 	{
 		M10NStringDatabase selectedAsset = null;
+		string focusKey = null;
 
 		if (Selection.activeObject == null)
 		{
@@ -455,6 +476,7 @@ public class MultiLanguage : EditorWindow {
 			if (m10ntext)
 			{
 				selectedAsset = m10ntext.database;
+				focusKey = m10ntext.stringReference.key;
 			}
 		}
 				
@@ -462,9 +484,16 @@ public class MultiLanguage : EditorWindow {
 		{
 			ResetEditorStatus();
 			mLanguages = selectedAsset;
-			if (m_listview != null) {
-				m_listview.OnM10NStringDatabaseChanged(selectedAsset);
-				//m_listview.InitSelection (true);
+			Debug.Log("SelectionItem changed to:" + focusKey);
+			if (m_StringTableListView != null) {
+				m_StringTableListView.OnM10NStringDatabaseChanged(selectedAsset);
+				//m_StringTableListView.InitSelection (true);
+			}
+		}
+
+		if( focusKey != null ) {
+			if (m_StringTableListView != null) {
+				m_StringTableListView.SelectItemForKey(focusKey);
 			}
 		}
 	}
@@ -503,8 +532,8 @@ public class MultiLanguage : EditorWindow {
 
 	void EndRenaming()
 	{
-		if (m_listview != null) {
-			m_listview.EndRenaming();
+		if (m_StringTableListView != null) {
+			m_StringTableListView.EndRenaming();
 		}
 	}
 
@@ -519,8 +548,8 @@ public class MultiLanguage : EditorWindow {
 //		m_Controller.OnUnitySelectionChanged ();
 //		m_Controller.OnSubAssetChanged ();
 
-		if (m_listview != null) {
-			m_listview.OnUndoRedoPerformed ();
+		if (m_StringTableListView != null) {
+			m_StringTableListView.OnUndoRedoPerformed ();
 		}
 
 //		AudioMixerUtility.RepaintAudioMixerAndInspectors ();
@@ -528,10 +557,10 @@ public class MultiLanguage : EditorWindow {
 
 	void OnProjectChanged ()
 	{
-		if (m_listview == null) {
+		if (m_StringTableListView == null) {
 			Init ();
 		} else {
-			m_listview.ReloadTree ();
+			m_StringTableListView.ReloadTree ();
 		}
 	}
 }

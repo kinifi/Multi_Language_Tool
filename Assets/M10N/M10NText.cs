@@ -20,6 +20,12 @@ public class M10NText : UnityEngine.UI.Text
 		}
 	}
 
+	public M10NStringReference stringReference {
+		get {
+			return m_reference;
+		}
+	}
+
     public override string text
     {
         get

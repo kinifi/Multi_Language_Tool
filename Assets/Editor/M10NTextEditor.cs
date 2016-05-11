@@ -48,6 +48,7 @@ public class M10NTextEditor : UnityEditor.UI.GraphicEditor
 			m_M10NIndex.intValue = EditorGUILayout.Popup(m_M10NIndex.intValue, keyArray);
 			if(GUI.changed) {
 				m_M10NSelectedKey.stringValue = db.keys[m_M10NIndex.intValue];
+				MultiLanguage.SelectItemForKey(m_M10NSelectedKey.stringValue);
 			}
 		}
 		EditorGUILayout.EndHorizontal();
@@ -61,7 +62,7 @@ public class M10NTextEditor : UnityEditor.UI.GraphicEditor
 		}
 
 		EditorGUILayout.LabelField("Text:", EditorStyles.boldLabel);
-		if(!keyMissing) {
+		if(db != null && !keyMissing) {
 			EditorGUILayout.LabelField(db.GetStringTable().values[m_M10NIndex.intValue].text);
 		}
 	}
