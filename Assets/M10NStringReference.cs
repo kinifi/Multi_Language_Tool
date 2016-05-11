@@ -12,6 +12,9 @@ public struct M10NStringReference {
 	[SerializeField]
 	private int m_index;
 
+	[SerializeField]
+	private string m_selectedKey;
+
 	// TODO: Editor Only
 //	[SerializeField]
 //	private string m_key;
@@ -25,7 +28,7 @@ public struct M10NStringReference {
 	public string text {
 		get {
 			//Assert.IsNotNull(m_db);
-			if(m_db == null || m_db.keys.Count < m_index) return string.Empty;
+			if(m_db == null || m_db.keys.Count < m_index || m_index < 0) return string.Empty;
 			//TODO: return appropriate text of current language
 			return m_db.GetStringTable(Application.currentLanguage).values[m_index].text;
 		}
@@ -47,6 +50,7 @@ public struct M10NStringReference {
 		set {
 			Assert.IsTrue(m_db.keys.Contains(value));
 			m_index = m_db.keys.IndexOf(value);
+			m_selectedKey = value;
 		}
 	}
 

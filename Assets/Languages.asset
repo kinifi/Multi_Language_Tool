@@ -711,7 +711,7 @@ MonoBehaviour:
     isEditing: 0
   - language: 22
     values:
-    - m_value: "\u307B\u3052\u307B\u3052\u3060\u3088\uFF1F\uFF1F"
+    - m_value: "\u3042\uFF53\uFF44\uFF46"
       m_pluralValues: []
     - m_value: "\u306A\u3093\u3060\u3063\u3066\u306E\uFF1F"
       m_pluralValues: []
@@ -733,11 +733,11 @@ MonoBehaviour:
       m_pluralValues: []
     - m_value: "\u307B\u3052\u307B\u3052\u3060\u3088\uFF1F\uFF1F"
       m_pluralValues: []
-    - m_value: "\u307B\u3052\u307B\u3052\u3060\u3088\uFF1F\uFF1F"
+    - m_value: "\u3053\u3093\u306B\u3061\u306F123"
       m_pluralValues: []
     - m_value: "\u307B\u3052\u307B\u3052\u3060\u3088\uFF1F\uFF1F"
       m_pluralValues: []
-    - m_value: "\u307B\u3052\u307B\u3052\u3060\u3088\uFF1F\uFF1F"
+    - m_value: "\u307B\u3052\u307B\u3052\u3060\u3088\uFF1F\uFF1F\u3060\uFF46\uFF44\uFF53\uFF44\uFF46"
       m_pluralValues: []
     isEditing: 0
   - language: 23

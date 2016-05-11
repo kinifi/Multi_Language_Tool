@@ -9,11 +9,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06ab10afbf824419c93450910acff9dc, type: 3}
-  m_Name: Languages 2
+  m_Name: Languages 1
   m_EditorClassIdentifier: 
   keys:
-  - hoge
   - HELLO123
+  - hello
   m_database:
   - language: 0
     values:
@@ -157,7 +157,7 @@ MonoBehaviour:
     isEditing: 0
   - language: 20
     values:
-    - m_value: hogehoge
+    - m_value: 
       m_pluralValues: []
     - m_value: 
       m_pluralValues: []
@@ -171,9 +171,9 @@ MonoBehaviour:
     isEditing: 0
   - language: 22
     values:
-    - m_value: fuga
+    - m_value: "\u3053\u306E\u30C7\u30FC\u30BF\u3060\u3068\u3053\u3046\u306A\u308A\u307E\u3059"
       m_pluralValues: []
-    - m_value: "\u3053\u3063\u3061\u306B\u3082\u8FFD\u52A0\u3057\u307E\u3057\u305F"
+    - m_value: "\u3053\u3063\u3061\u306EHello"
       m_pluralValues: []
     isEditing: 0
   - language: 23
