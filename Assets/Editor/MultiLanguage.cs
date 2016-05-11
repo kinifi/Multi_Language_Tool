@@ -28,6 +28,8 @@ public class MultiLanguage : EditorWindow {
 
 	private int keySelected;
 
+	private Splitter m_LeftEditorSplitter;
+
 	[MenuItem("Window/Multi-Language %l")]
 	static void ShowEditor() {
 
@@ -44,6 +46,8 @@ public class MultiLanguage : EditorWindow {
 	public void Init() 
 	{
 		ResetEditorStatus();
+
+		m_LeftEditorSplitter = new Splitter(Splitter.SplitDirection.Horizontal, 150, 150);
 	}
 
 	public void ResetEditorStatus() {
@@ -77,11 +81,23 @@ public class MultiLanguage : EditorWindow {
 			//the menu that will always display on top
 			DoLanguageMenuBar();
 
+			// do split here
+			m_LeftEditorSplitter.DoResizeScrollView(new Rect(0, 0, position.width, position.height));
+			int editorWidth = (int)position.width-(int)position.width/4;
+			int commentWidth = (int)position.width/4;
+
+			Rect leftPaneRect_listview = new Rect(0, 20, editorWidth, position.height-position.height/2.5f);
+			Rect leftPaneRect_editorview = new Rect(0, position.height-position.height/3, editorWidth, position.height);
+			Rect rightPaneRect = new Rect(editorWidth, 20, commentWidth, position.height);
+
 			//display keys and values
-			DoLanguageKeyValueListView();
+			DoLanguageKeyValueListView(leftPaneRect_listview);
 
 			//display edit field
-			DoLanguageKeyValueEditor();
+			DoLanguageKeyValueEditor(leftPaneRect_editorview);
+
+			//display edit field
+			DoRightSideView(rightPaneRect);
 
 			//remove notification if we were displaying one
 			RemoveNotification();
@@ -96,25 +112,38 @@ public class MultiLanguage : EditorWindow {
 
 	}
 
-	private void DoLanguageKeyValueListView()
+	private void DoRightSideView(Rect paneRectSize)
+	{
+
+        GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
+        GUILayout.Label("show comment here");
+        
+        
+        GUILayout.EndArea();
+
+	}
+
+	private void DoLanguageKeyValueListView(Rect paneRectSize)
 	{
 		Assert.IsNotNull(mLanguages);
 
+        GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
+
 		M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
 
-		//create the box that shows the Titles Key & Values			
-		GUILayout.BeginHorizontal("HelpBox");
-		GUILayout.Label("Key");
-		GUILayout.Label("Value");
-		GUILayout.EndHorizontal();
-		//end of box that shows titles
+		// //create the box that shows the Titles Key & Values			
+		// GUILayout.BeginHorizontal("HelpBox");
+		// GUILayout.Label("Key");
+		// GUILayout.Label("Value");
+		// GUILayout.EndHorizontal();
+		// //end of box that shows titles
 
 		//start the scroll box here so values and keys can be scrollable
 		mScroll = EditorGUILayout.BeginScrollView(mScroll);
 
 		//being the vertical view of the key and values
 		GUILayout.BeginVertical();
-		float columnWidth = (position.width / 2.0f) - 20.0f;
+		float columnWidth = (paneRectSize.width / 2.0f) - 20.0f;
 		for(int i=0; i < mLanguages.keys.Count; ++i) 
 		{
 			GUILayout.BeginHorizontal( ((keySelected == i) ? "SelectionRect" : "HelpBox" ));
@@ -130,9 +159,10 @@ public class MultiLanguage : EditorWindow {
 		}
 		GUILayout.EndVertical();
 		EditorGUILayout.EndScrollView();
+		GUILayout.EndArea();
 	}
 
-	private void DoLanguageKeyValueEditor()
+	private void DoLanguageKeyValueEditor(Rect paneRectSize)
 	{
 		Assert.IsNotNull(mLanguages);
 
@@ -148,6 +178,10 @@ public class MultiLanguage : EditorWindow {
 //			}
 //
 //			GUILayout.EndHorizontal();
+
+		GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
+
+		GUILayout.Space(20);
 
 		string key = string.Empty;
 		bool isValidKeySelected = mLanguages.keys.Count > keySelected;
@@ -180,11 +214,11 @@ public class MultiLanguage : EditorWindow {
 			EditorUtility.SetDirty(mLanguages);
 		}
 
-		GUILayout.Label("Comments from the .po files will go here");
-
 		GUILayout.EndVertical();
 
 		EditorGUILayout.Space();
+
+		GUILayout.EndArea();
 	}
 
 	//create the top menu bar
@@ -202,6 +236,7 @@ public class MultiLanguage : EditorWindow {
 
 		EditorGUILayout.Space();
 
+		//display the add key button in the toolbar
 		DoAddKey();
 
 		EditorGUILayout.Space();
