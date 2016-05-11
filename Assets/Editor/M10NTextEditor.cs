@@ -77,6 +77,8 @@ public class M10NTextEditor : UnityEditor.UI.GraphicEditor
 			if(db != null) {
 				m_M10NIndex.intValue = db.keys.IndexOf(m_M10NSelectedKey.stringValue);
 			}
+
+			MultiLanguage.RepaintEditor();
 		}
 
 		DoM10NStringReferenceGUI();

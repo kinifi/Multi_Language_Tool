@@ -28,6 +28,11 @@ public class MultiLanguage : EditorWindow {
 
 	private int keySelected;
 
+	private SplitterState mVerticalSplitterState;
+
+	private TreeViewState m_stringTableListViewState;
+	private M10NStringTableListView m_listview;
+
 	[MenuItem("Window/Multi-Language %l")]
 	static void ShowEditor() {
 
@@ -40,9 +45,25 @@ public class MultiLanguage : EditorWindow {
 
 	}
 
+	public static void RepaintEditor() {
+		MultiLanguage editor = EditorWindow.GetWindow<MultiLanguage>();
+		editor.DetectLanguageFileFromSelection ();
+		editor.Repaint();
+	}
+
 	// Use this for initialization
 	public void Init() 
 	{
+		if (m_stringTableListViewState == null)
+			m_stringTableListViewState = new TreeViewState();
+		
+		m_listview = new M10NStringTableListView(this, m_stringTableListViewState, mLanguages);
+
+//					m_LayoutStripsOnTop.m_VerticalSplitter = new SplitterState(new int[] { 65, 35 }, new int[] { 85, 105 }, null);
+//					m_LayoutStripsOnTop.m_HorizontalSplitter = new SplitterState (new int[] { 60, 60, 60, 60 }, new int[] { 85, 85, 85, 85 }, null);
+
+		mVerticalSplitterState = new SplitterState(new int[] { 65, 35 }, new int[] { 85, 105 }, null);
+
 		ResetEditorStatus();
 	}
 
@@ -74,6 +95,14 @@ public class MultiLanguage : EditorWindow {
 		//check if the current language is loaded or not
 		if(mLanguages != null)
 		{
+			// Do layouting
+//			SplitterGUILayout.BeginVerticalSplit(mVerticalSplitterState, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+//			GUILayout.BeginVertical ();
+//			GUILayout.EndVertical ();
+//			SplitterGUILayout.EndVerticalSplit();
+//
+//			Rect splitViewRect = new Rect (0, 0, position.width, mVerticalSplitterState.realSizes[0]);
+
 			//the menu that will always display on top
 			DoLanguageMenuBar();
 
@@ -99,6 +128,10 @@ public class MultiLanguage : EditorWindow {
 	private void DoLanguageKeyValueListView()
 	{
 		Assert.IsNotNull(mLanguages);
+
+//		m_listview.UseScrollView(true);
+//		m_listview.OnGUI (sectionRect);
+
 
 		M10NStringTable t = mLanguages.GetStringTable(mCurrentLanguage);
 
@@ -335,6 +368,9 @@ public class MultiLanguage : EditorWindow {
 		{
 			ResetEditorStatus();
 			mLanguages = selectedAsset;
+			if (m_listview != null) {
+				m_listview.InitSelection (true);
+			}
 		}
 	}
 
@@ -357,7 +393,50 @@ public class MultiLanguage : EditorWindow {
 
 	public void OnLostFocus () 
 	{
-
+		EndRenaming();
 	}
 
+	void PlaymodeChanged()
+	{
+		if (mLanguages != null)
+		{
+			Repaint();
+		}
+
+		EndRenaming();
+	}
+
+	void EndRenaming()
+	{
+		if (m_listview != null) {
+			m_listview.EndRenaming();
+		}
+	}
+
+	public void UndoRedoPerformed()
+	{
+		if (mLanguages == null) {
+			return;
+		}
+
+		// Undo may have deleted one of the selected groups
+//		m_Controller.SanitizeGroupViews ();
+//		m_Controller.OnUnitySelectionChanged ();
+//		m_Controller.OnSubAssetChanged ();
+
+		if (m_listview != null) {
+			m_listview.OnUndoRedoPerformed ();
+		}
+
+//		AudioMixerUtility.RepaintAudioMixerAndInspectors ();
+	}
+
+	void OnProjectChanged ()
+	{
+		if (m_listview == null) {
+			Init ();
+		}
+
+		//m_listview.ReloadTree ();
+	}
 }
