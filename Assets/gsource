@@ -1,0 +1,1 @@
+gource --auto-skip-seconds 1 -1920x1080 --hide dirnames,filenames -f --title "MultLanguage Support At Runtime" --highlight-users --user-image-dir avatar
