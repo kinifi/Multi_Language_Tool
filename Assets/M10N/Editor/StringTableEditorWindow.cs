@@ -296,7 +296,7 @@ public class StringTableEditorWindow : EditorWindow {
 		//export the selected language
 		DoExportLanguageFileButton();
 		//import the selected po file 
-		DoImportPOFile();
+		DoImportLanguageFileButton();
 
 		GUILayout.EndHorizontal();
 
@@ -323,32 +323,27 @@ public class StringTableEditorWindow : EditorWindow {
 
 	}
 
-	public void DoImportPOFile ()
+	public void DoImportLanguageFileButton ()
 	{
 		if(GUILayout.Button("Import", EditorStyles.toolbarButton, GUILayout.Width(50)))
 		{
 			//start parsing the PO File
-			ParsePOFile();
+			//get the file path
+			var newPath = EditorUtility.OpenFilePanel(
+				"Select PO file",
+				"",
+				"po");
+			if(newPath.Length == 0) {
+				return;
+			}
+
+			//start importing the file
+			M10NPOCreator.ImportFile(mLanguages, newPath, mCurrentReferenceLanguage);
+
+			EditorUtility.SetDirty(mLanguages);
+			m_StringTableListView.ReloadTree ();
 		}
 
-	}
-
-	private void ParsePOFile()
-	{
-		//get the file path
-		var newPath = EditorUtility.OpenFilePanel(
-					"Select PO file",
-					"",
-					"po");
-		if(newPath.Length == 0) {
-			return;
-		}
-
-		//start importing the file
-		M10NPOCreator.ImportFile(mLanguages, newPath);
-		
-		EditorUtility.SetDirty(mLanguages);
-		m_StringTableListView.ReloadTree ();
 	}
 
 	//exports the language translations to a .po file
@@ -366,26 +361,12 @@ public class StringTableEditorWindow : EditorWindow {
 					mCurrentLanguage.ToString() + ".po",
 					"po");
 			//check if the file path is zero 
-			if(path.Length != 0)
+			if(path.Length == 0) {
 				return;
-
-			Debug.Log("Save Path: " + path);
-
-			//get the current language selected
-
-			//get the mLanguages Object
-			//get the keys
-			for(int i = 0; i < mLanguages.Count; ++i) 
-			{
-				string key = mLanguages[i];
-				string value = mLanguages[mCurrentLanguage].values[i].text;
-
-				//for each key, create an entry
-				M10NPOCreator.POEntry(key, key, value);
 			}
 
-			M10NPOCreator.CreateEntryFile(mCurrentLanguage, path);
-
+			//get the current language selected
+			M10NPOCreator.ExportFile(mLanguages, mCurrentLanguage, mCurrentReferenceLanguage, path);
 		}
 
 	}

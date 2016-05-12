@@ -8,46 +8,11 @@ using System.Collections.Generic;
 
 public class M10NPOCreator {
 
-	private static List<string> mPOEntries = new List<string>();
-
-
-	private	static SystemLanguage mParsedLanguage;
-
-	/// <summary>
-	/// Creates the PO Language file
-	/// </summary>
-	/// <param name="language">Name of the file</param>
-	public static void CreateEntryFile (SystemLanguage language, string path)
-	{
-
-		if(mPOEntries.Count <= 0)
-		{
-			Debug.LogError("PO File Creation Error: No Entries to write");
-		}
-		else
-		{
-			StringBuilder builder = new StringBuilder();
-			builder.Append(PoInitEntry(language)).AppendLine().AppendLine();
-
-			for (int i = 0; i < mPOEntries.Count; i++)
-			{
-				builder.Append(mPOEntries[i]);
-			}
-
-			File.WriteAllText(path, builder.ToString());
-			AssetDatabase.Refresh();
-			mPOEntries = new List<string>();
-			Debug.Log(language + ".po file created");
-		}
-
-	}
-
 	//the po file headers that are required
-	private static string PoInitEntry (SystemLanguage language)
+	private static string CreatePoHeaderEntry (SystemLanguage language)
 	{
 		
 		string newLang = language.ToString().Substring(0, 2).ToLower();
-		Debug.Log("Language: " + newLang);
 
 		string PoInitEntry = 
 
@@ -79,7 +44,7 @@ public class M10NPOCreator {
 	/// <param name="msgid">Value to be translated</param>
 	/// <param name="msgstr">Translated Value</param>
 	/// <param name="comment">Production Comment</param>
-	public static void POEntry(string key, string msgid, string msgstr, string comment = "")
+	private static string CreatePOEntry(string key, string msgid, string msgstr, string comment = "")
 	{
 		//check if msgid has quotes
 		msgid.Replace("\"","\\\"");
@@ -89,68 +54,192 @@ public class M10NPOCreator {
 		string newEntry = 
 		"# " + comment + "\n" +
 		"#: " + key + "\n" +
+		"msgctxt " + '"' + key + '"' + "\n" +
 		"msgid " + '"' + msgid + '"' + "\n" +
 		"msgstr " + '"' + msgstr + '"' + "\n" + "\n";
 		
-		mPOEntries.Add(newEntry);
+		return newEntry;
 	}
 
-	public static void ImportFile(M10NStringDatabase mLanguages, string newPath)
-	{
+	private class POEntry {
+		public string msgid;
+		public string msgctxt;
+		public string msgstr;
+		public List<string> comments;
 
-		List<string> _key = new List<string>();
-		List<string> _value = new List<string>();
-		List<string> _comment = new List<string>();
-		
-		string line;
+		public POEntry() {
+			comments = new List<string>();
+		}
+
+		public bool ready {
+			get {
+				return msgid != null && msgctxt != null && msgstr != null &&
+					msgid.Length > 0;
+			}
+		}
+	}
+
+	private static SystemLanguage ReadPOHeader(StreamReader r) {
+
+		SystemLanguage l = SystemLanguage.Unknown;
+
+		// read header
+		while(!r.EndOfStream) {
+			string line = r.ReadLine();
+			if(line == null ) {
+				break;
+			}
+			line = line.Trim();
+			if(line.Length == 0) {
+				break;
+			}
+
+			if(line.Contains("Language:"))
+			{
+				line = line.Replace("Language:", "").Trim().Trim('\"').Replace("\\n", "").Trim();
+				l = M10NEditorUtility.ISOToSystemLanguage(line);
+			}
+		}
+
+		return l;
+	}
+
+	private static POEntry ReadNextEntry(StreamReader r) {
+
+		POEntry e = null;
+
+		while( !r.EndOfStream ) {
+			string line = r.ReadLine();
+			if(line == null ) {
+				break;
+			}
+			line = line.Trim();
+			if(line.Length == 0) {
+				break;
+			}
+				
+			if(line.Contains("msgid"))
+			{
+				if(e == null) e = new POEntry();
+				if( e.msgid != null ) {
+					Debug.LogWarning("[Bad entry]Skipping " + e.msgctxt + " " + e.msgid);
+					break;
+				}
+				line = line.Replace("msgid", "").Trim().Trim('\"');
+				e.msgid = line;
+			}
+			else if(line.Contains("msgctxt"))
+			{
+				if(e == null) e = new POEntry();
+				if( e.msgctxt != null ) {
+					Debug.LogWarning("[Bad entry]Skipping " + e.msgctxt + " " + e.msgid);
+					break;
+				}
+				line = line.Replace("msgctxt", "").Trim().Trim('\"');
+				e.msgctxt = line;
+			}
+			else if(line.Contains("msgstr"))
+			{
+				if(e == null) e = new POEntry();
+				if( e.msgstr != null ) {
+					Debug.LogWarning("[Bad entry]Skipping " + e.msgctxt + " " + e.msgid);
+					break;
+				}
+				line = line.Replace("msgstr", "").Trim().Trim('\"');
+				e.msgstr = line;
+			}
+			else if(line.StartsWith("\""))
+			{
+				if(e!=null && e.msgstr != null) {
+					line = line.Trim().Trim('\"');
+					e.msgstr = e.msgstr + line;
+				}
+			}
+			else if(line.Contains("#:"))
+			{
+				if(e == null) e = new POEntry();
+				line = line.Replace("#:", "").Trim();
+				e.comments.Add(line);
+			}
+		}
+
+		if(e!=null && e.ready) {
+			return e;
+		}
+
+		return null;
+	}
+
+	public static void ImportFile(M10NStringDatabase db, string newPath, 
+		SystemLanguage refLanguage = SystemLanguage.Unknown, bool updateRefLanguage = false)
+	{
+		List<POEntry> entries = new List<POEntry>();
+
+		SystemLanguage parsedLanguage = SystemLanguage.Unknown;
 
 		//start parsing each line
 		using(StreamReader file = new StreamReader(newPath))
 		{
-			while((line = file.ReadLine()) != null)
-			{
-				if(line.Contains("msgid"))
-				{
-					line = line.Replace("msgid ", "").Replace("\"", "").Replace("\"", "");
-					if(String.IsNullOrEmpty(line) == false)
-					{
-						_key.Add(line);
-					}
-				}
-				else if(line.Contains("msgstr"))
-				{
-					line = line.Replace("msgstr ", "").Replace("\"", "").Replace("\"", "");
-					if(String.IsNullOrEmpty(line) == false)
-					{
-						_value.Add(line);
-					}
-				}
-				else if(line.Contains("#:"))
-				{
-					line = line.Replace("#: ", "");
-					if(String.IsNullOrEmpty(line) == false)
-					{
-						_comment.Add(line);
-					}
-				}
-				else if(line.Contains("Language: "))
-				{
-					line = line.Replace("Language: ", "").Replace("\\n", "").Replace("\"", "").Replace("\"", "");
-					if(String.IsNullOrEmpty(line) == false)
-					{
-						mParsedLanguage = M10NEditorUtility.ISOToSystemLanguage(line);
-					}	
+			// read header
+			parsedLanguage = ReadPOHeader(file);
+			if( parsedLanguage == SystemLanguage.Unknown ) {
+				Debug.LogError("Unknown language po file: " + newPath);
+				return ;
+			}
+
+			while(!file.EndOfStream) {
+				POEntry e = ReadNextEntry(file);
+				if(e != null) {
+					entries.Add(e);
 				}
 			}
 		}
 
 		///done parsing now add them to the language.asset file
-		for(int i = 0; i < _key.Count; ++i)
+		foreach(POEntry e in entries)
 		{
+			if( e.msgid == null || e.msgctxt == null || e.msgstr == null ) {
+				Debug.Log("Skipping:" + e.msgctxt + " " + e.msgid);
+				continue;
+			}
+
 			//add the key and value to the language file
-			mLanguages.SetTextEntry(mParsedLanguage, _key[i], _value[i]);
+			db.SetTextEntry(parsedLanguage, e.msgctxt, e.msgstr);
+
+			if( refLanguage != SystemLanguage.Unknown ) {
+				string refValue = db[refLanguage].values[ db.IndexOfKey(e.msgctxt) ].text;
+				if( refValue != e.msgid ) {
+					if( updateRefLanguage ) {
+						db.SetTextEntry(refLanguage, e.msgctxt, e.msgid);
+					} else {
+						Debug.LogWarning("Reference Language is different for key["+e.msgctxt+"]:\\n Is: " + refValue +
+							"\\nPO: " + e.msgid);
+					}
+				}
+			}
 		}
 
+	}
+
+	public static void ExportFile(M10NStringDatabase db, SystemLanguage targetLanguage, SystemLanguage referenceLanguage, string newPath)
+	{
+
+		StringBuilder builder = new StringBuilder();
+		builder.Append(CreatePoHeaderEntry(targetLanguage)).AppendLine().AppendLine();
+			
+		//get the mLanguages Object
+		//get the keys
+		for(int i = 0; i < db.Count; ++i) 
+		{
+			string key    = db[i];
+			string msgid  = db[referenceLanguage].values[i].text;
+			string msgstr = db[targetLanguage].values[i].text;
+
+			//for each key, create an entry
+			builder.Append( M10NPOCreator.CreatePOEntry(key, msgid, msgstr) );
+		}
+
+		File.WriteAllText(newPath, builder.ToString());
 	}
 
 }
