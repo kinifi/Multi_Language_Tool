@@ -40,6 +40,7 @@ public class POCreator {
 
 	}
 
+	//the po file headers that are required
 	private static string PoInitEntry (SystemLanguage language)
 	{
 		

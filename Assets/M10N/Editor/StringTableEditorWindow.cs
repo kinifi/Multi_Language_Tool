@@ -202,7 +202,8 @@ public class StringTableEditorWindow : EditorWindow {
 
         GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
         
-        GUILayout.Label("show comment here");
+        GUILayout.Label("comment displays here", "HelpBox");
+        GUILayout.TextArea("write a new comment here. When Saved, this will overwrite the above comment", GUILayout.Height(100));
         
         GUILayout.EndArea();
 
