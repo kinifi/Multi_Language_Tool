@@ -160,18 +160,12 @@ public class MultiLanguage : EditorWindow {
 			SplitterGUILayout.EndHorizontalSplit();
 
 			// do split here
-//			m_LeftEditorSplitter.DoResizeScrollView(new Rect(0, 0, position.width, position.height));
-//			int editorWidth = (int)position.width-(int)position.width/4;
-//			int commentWidth = (int)position.width/4;
 			int editorWidth = (int)mHorizontalSplitterState.realSizes[0];
 			int commentWidth = (int)mHorizontalSplitterState.realSizes[1];
 
 			int listViewHeight = (int)mVerticalSplitterState.realSizes[0];
 			int editorHeight = (int)mVerticalSplitterState.realSizes[1];
 
-//			Rect leftPaneRect_listview = new Rect(0, s_Styles.kToolbarHeight, editorWidth, position.height- s_Styles.kEditorPaneHeight - s_Styles.kToolbarHeight);
-//			Rect leftPaneRect_editorview = new Rect(0, leftPaneRect_listview.y + leftPaneRect_listview.height, editorWidth, s_Styles.kEditorPaneHeight);
-//			Rect rightPaneRect = new Rect(editorWidth, s_Styles.kToolbarHeight, commentWidth, position.height - s_Styles.kToolbarHeight);
 			Rect leftPaneRect_listview = new Rect(0, s_Styles.kToolbarHeight, editorWidth, listViewHeight - s_Styles.kToolbarHeight);
 			Rect leftPaneRect_editorview = new Rect(0, leftPaneRect_listview.height + s_Styles.kToolbarHeight, editorWidth, editorHeight);
 
@@ -209,7 +203,6 @@ public class MultiLanguage : EditorWindow {
         GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
         
         GUILayout.Label("show comment here");
-        
         
         GUILayout.EndArea();
 
@@ -302,9 +295,6 @@ public class MultiLanguage : EditorWindow {
 
 		//export the selected language
 		DoExportLanguageFileButton();
-		
-		//select to get a .po file and import to the language asset
-		DoImportLanguageFileButton();
 
 		GUILayout.EndHorizontal();
 
@@ -325,7 +315,6 @@ public class MultiLanguage : EditorWindow {
 
 			//clear the text box
 			m_NewLanguageKey = "";
-			//Debug.Log("Added New Key");
 		}
 
 
@@ -338,16 +327,7 @@ public class MultiLanguage : EditorWindow {
 		if(GUILayout.Button("Export", EditorStyles.toolbarButton, GUILayout.Width(50)))
 		{
 			//start exporting language File here
-		}
-
-	}
-
-	//opens up a file selection for a .po file to import
-	public void DoImportLanguageFileButton()
-	{
-		if(GUILayout.Button("Import", EditorStyles.toolbarButton, GUILayout.Width(50)))
-		{
-			//start exporting language File here
+			Assert.IsNotNull(mLanguages);
 		}
 
 	}
