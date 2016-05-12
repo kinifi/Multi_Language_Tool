@@ -296,6 +296,8 @@ public class StringTableEditorWindow : EditorWindow {
 
 		//export the selected language
 		DoExportLanguageFileButton();
+		//import the selected po file 
+		DoImportPOFile();
 
 		GUILayout.EndHorizontal();
 
@@ -319,6 +321,15 @@ public class StringTableEditorWindow : EditorWindow {
 		}
 
 
+
+	}
+
+	public void DoImportPOFile ()
+	{
+		if(GUILayout.Button("Import", EditorStyles.toolbarButton, GUILayout.Width(50)))
+		{
+
+		}
 
 	}
 
