@@ -10,6 +10,23 @@ public class M10NText : UnityEngine.UI.Text
 	[SerializeField]
 	private M10NStringReference m_reference;
 
+	private GameObject m_keyLabel;
+
+	private static bool s_showKeyLabel;
+
+	public static bool displayKeyLabel {
+		get {
+			return s_showKeyLabel;
+		}
+		set {
+			s_showKeyLabel = value;
+			M10NText[] texts = GameObject.FindObjectsOfType<M10NText>();
+			foreach(M10NText t in texts) {
+				t.ShowKeyLabel(value);
+			}
+		}
+	}
+
 	protected M10NText()
     {
 	}
@@ -53,6 +70,10 @@ public class M10NText : UnityEngine.UI.Text
     protected override void OnEnable()
     {
         base.OnEnable();
+
+		if(displayKeyLabel) {
+			ShowKeyLabel(true);
+		}
     }
 
     protected override void OnDisable()
@@ -102,5 +123,45 @@ public class M10NText : UnityEngine.UI.Text
 
 	void OnLanguageChanged() {
 		SetVerticesDirty();
+	}
+
+	public void ShowKeyLabel(bool show) {
+		//TODO:
+		if(m_keyLabel != null) {
+			m_keyLabel.SetActive(show);
+		} else {
+			GameObject labelObj = new GameObject();
+			labelObj.name = "__keylabel";
+			Text t = labelObj.AddComponent<Text>();
+			t.text = m_reference.key;
+			Outline ol = labelObj.AddComponent<Outline>() as Outline;
+			//labelObj.transform.hideFlags = HideFlags.DontSave;
+			labelObj.transform.hideFlags = HideFlags.DontSave | HideFlags.HideInHierarchy;
+
+			t.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+			t.fontSize = 20;
+			t.verticalOverflow = VerticalWrapMode.Overflow;
+			t.horizontalOverflow = HorizontalWrapMode.Overflow;
+			t.alignment = TextAnchor.MiddleCenter;
+			t.color = Color.yellow;
+			ol.effectColor = Color.black;
+
+			m_keyLabel = labelObj;
+			RectTransform rt = m_keyLabel.GetComponent<RectTransform>();
+			rt.SetParent(transform, false);
+			rt.localPosition = Vector3.zero; 
+			m_keyLabel.SetActive(show);
+		}
+	}
+
+	public override void SetVerticesDirty ()
+	{
+		if(m_keyLabel != null) {
+			Text t = m_keyLabel.GetComponent<Text>();
+			if(t.text != m_reference.key) {
+				t.text = m_reference.key;
+			}
+		}
+		base.SetVerticesDirty ();
 	}
 }

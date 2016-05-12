@@ -259,7 +259,7 @@ MonoBehaviour:
       m_pluralValues: []
     - m_value: PLAY
       m_pluralValues: []
-    - m_value: Score
+    - m_value: Score {0}
       m_pluralValues: []
     - m_value: Game Over!
       m_pluralValues: []
@@ -531,25 +531,25 @@ MonoBehaviour:
     isEditing: 0
   - language: 22
     values:
-    - m_value: "\u30CA\u30A4\u30C8\u30E1\u30A2\u30B7\u30E5\u30FC\u30BF\u30FC"
+    - m_value: "\u30CA\u30A4\u30C8\u30E1\u30A2\u30B7\u30E5\u30FC\u30BF\u30FC!"
       m_pluralValues: []
     - m_value: "\u30D7\u30EC\u30A4"
       m_pluralValues: []
-    - m_value: "\u30B9\u30B3\u30A2"
+    - m_value: "\u30B9\u30B3\u30A2 {0}"
       m_pluralValues: []
-    - m_value: 
+    - m_value: "\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC\uFF01"
       m_pluralValues: []
-    - m_value: 
+    - m_value: "\u30DD\u30FC\u30BA\u4E2D"
       m_pluralValues: []
-    - m_value: 
+    - m_value: "\u7D42\u4E86"
       m_pluralValues: []
-    - m_value: 
+    - m_value: "\u518D\u958B\u3059\u308B"
       m_pluralValues: []
-    - m_value: 
+    - m_value: "\u30B5\u30A6\u30F3\u30C9 ON/OFF"
       m_pluralValues: []
-    - m_value: 
+    - m_value: "SE\u97F3\u91CF"
       m_pluralValues: []
-    - m_value: 
+    - m_value: "\u30DF\u30E5\u30FC\u30B8\u30C3\u30AF\u97F3\u91CF"
       m_pluralValues: []
     isEditing: 0
   - language: 23
