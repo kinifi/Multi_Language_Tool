@@ -12,26 +12,28 @@ public class POCreator {
 
 	//setup text #1 string
 	private static string PoInitEntry = 
+	
+		"msgid" + '"' + '"' +
+		"msgstr"  + '"' + '"' +
+		'"' + "Project-Id-Version: Report-Msgid-Bugs-To: POT-Creation-Date: 05/12/2016 "  + '"' +
+		'"' + "12:42:48\\n" + '"' +
+		'"' + "PO-Revision-Date: \\n" + '"' +
+		'"' + "Last-Translator: \\n" + '"' +
+		'"' + "Language-Team: \\n" + '"' +
+		'"' + "Language: ja\\n" + '"' +
+		'"' + "MIME-Version: 1.0\\n" + '"' +
+		'"' + "Content-Type: text/plain; charset=UTF-8\\n" + '"' +
+		'"' + "Content-Transfer-Encoding: 8bit\\n" + '"' +
+		'"' + "X-Generator: Unity3D" + Application.unityVersion + "\\n" + '"' +
+		'"' + "POT-Creation-Date: \\n" + '"';
 
-		"msgid " + '"' + '"' + "\n" +
-		"msgstr " +  '"' + '"' + "\n" +
-		'"' + "Project-Id-Version: " + '"' + "\n" +
-		'"' + "Report-Msgid-Bugs-To: " + '"' + "\n" +
-		'"' + "POT-Creation-Date: " + DateTime.UtcNow + '"' + "\n" +
-		'"' + "PO-Revision-Date:" + '"' + "\n" +
-		'"' + "Last-Translator: " + '"' + "\n" +
-		'"' + "Language-Team: " + '"' + "\n" +
-		'"' + "Language: ja" + '"' + "\n" +
-		'"' + "MIME-Version: 1.0" + '"' + "\n" +
-		'"' + "Content-Type: text/plain; charset=UTF-8" + '"' + "\n" +
-		'"' + "Content-Transfer-Encoding: 8bit" + '"' + "\n" +
-		'"' + "X-Generator: Unity3D " + Application.unityVersion + '"' + "" + '"' + "\n";
+
 
 	/// <summary>
 	/// Creates the PO Language file
 	/// </summary>
 	/// <param name="language">Name of the file</param>
-	public static void CreateEntryFile (SystemLanguage language)
+	public static void CreateEntryFile (SystemLanguage language, string path)
 	{
 
 		if(mPOEntries.Count <= 0)
@@ -48,7 +50,7 @@ public class POCreator {
 				builder.Append(mPOEntries[i]);
 			}
 
-			File.WriteAllText(Application.dataPath + "/" + language.ToString().ToLower() + ".po", builder.ToString());
+			File.WriteAllText(path, builder.ToString());
 			AssetDatabase.Refresh();
 			mPOEntries = new List<string>();
 			Debug.Log(language + ".po file created");

@@ -326,8 +326,33 @@ public class StringTableEditorWindow : EditorWindow {
 	{
 		if(GUILayout.Button("Export", EditorStyles.toolbarButton, GUILayout.Width(50)))
 		{
-			//start exporting language File here
+			//check if the mLanguages file is null
 			Assert.IsNotNull(mLanguages);
+
+			//prompt user to export the file at a location
+			var path = EditorUtility.SaveFilePanel(
+					"Save Language as .po",
+					"",
+					mCurrentLanguage.ToString() + ".po",
+					"po");
+
+			Debug.Log("Save Path: " + path);
+
+			//get the current language selected
+
+			//get the mLanguages Object
+			//get the keys
+			for(int i = 0; i < mLanguages.keys.Count; ++i) 
+			{
+				string key = mLanguages.keys[i];
+				string value = mLanguages.GetStringTable(mCurrentLanguage).values[i].text;
+
+				//for each key, create an entry
+				POCreator.POEntry(key, key, value);
+			}
+
+			POCreator.CreateEntryFile(mCurrentLanguage, path);
+
 		}
 
 	}
