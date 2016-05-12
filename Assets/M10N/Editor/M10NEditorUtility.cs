@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class M10NEditorUtility {
 
-	public string GetSystemLanguageCulture(SystemLanguage language)
+	public static string GetSystemLanguageCulture(SystemLanguage language)
 	{
 		switch(language) {
 		case SystemLanguage.Afrikaans:		return "af";
@@ -49,5 +49,51 @@ public class M10NEditorUtility {
 		case SystemLanguage.Vietnamese:		return "vi";
 		default: return "";
 		}
+	}
+
+	public static SystemLanguage ISOToSystemLanguage (string langTag)
+	{
+		if(langTag == "af") return SystemLanguage.Afrikaans;
+		if(langTag == "ar") return SystemLanguage.Arabic;
+		if(langTag == "eu") return SystemLanguage.Basque;
+		if(langTag == "be") return SystemLanguage.Belarusian;
+		if(langTag == "bg") return SystemLanguage.Bulgarian;
+		if(langTag == "ca") return SystemLanguage.Catalan;
+		if(langTag == "zh-hans") return SystemLanguage.ChineseSimplified;
+		if(langTag == "zh-hant") return SystemLanguage.ChineseTraditional;
+		if(langTag == "cs") return SystemLanguage.Czech;
+		if(langTag == "da") return SystemLanguage.Danish;
+		if(langTag == "nl") return SystemLanguage.Dutch;
+		if(langTag == "en") return SystemLanguage.English;
+		if(langTag == "et") return SystemLanguage.Estonian;
+		if(langTag == "fo") return SystemLanguage.Faroese;
+		if(langTag == "fi") return SystemLanguage.Finnish;
+		if(langTag == "fr") return SystemLanguage.French;
+		if(langTag == "de") return SystemLanguage.German;
+		if(langTag == "el") return SystemLanguage.Greek;
+		if(langTag == "he") return SystemLanguage.Hebrew;
+		if(langTag == "hu") return SystemLanguage.Hungarian;
+		if(langTag == "is") return SystemLanguage.Icelandic;
+		if(langTag == "id") return SystemLanguage.Indonesian;
+		if(langTag == "it") return SystemLanguage.Italian;
+		if(langTag == "ja") return SystemLanguage.Japanese;
+		if(langTag == "ko") return SystemLanguage.Korean;
+		if(langTag == "lv") return SystemLanguage.Latvian;
+		if(langTag == "lt") return SystemLanguage.Lithuanian;
+		if(langTag == "no") return SystemLanguage.Norwegian;
+		if(langTag == "pl") return SystemLanguage.Polish;
+		if(langTag == "pt") return SystemLanguage.Portuguese;
+		if(langTag == "ro") return SystemLanguage.Romanian;
+		if(langTag == "ru") return SystemLanguage.Russian;
+		if(langTag == "sr") return SystemLanguage.SerboCroatian;
+		if(langTag == "sk") return SystemLanguage.Slovak;
+		if(langTag == "sl") return SystemLanguage.Slovenian;
+		if(langTag == "es") return SystemLanguage.Spanish;
+		if(langTag == "sv") return SystemLanguage.Swedish;
+		if(langTag == "th") return SystemLanguage.Thai;
+		if(langTag == "tr") return SystemLanguage.Turkish;
+		if(langTag == "uk") return SystemLanguage.Ukrainian;
+		if(langTag == "vi") return SystemLanguage.Vietnamese;
+		return SystemLanguage.Unknown;
 	}
 }
