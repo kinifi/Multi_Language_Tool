@@ -37,8 +37,6 @@ public class StringTableEditorWindow : EditorWindow {
 
 	private bool m_isInitialized;
 
-	private	SystemLanguage mParsedLanguage;
-
 	public class Styles {
 		public readonly int kToolbarHeight = 20;
 		public readonly int kEditorPaneHeight = 400;
@@ -333,85 +331,26 @@ public class StringTableEditorWindow : EditorWindow {
 	{
 		if(GUILayout.Button("Import", EditorStyles.toolbarButton, GUILayout.Width(50)))
 		{
-
-			parsePOFile();
-
-			//tell the editor we have modified the data
-			EditorUtility.SetDirty(mLanguages);
-			Repaint();
-
+			//start parsing the PO File
+			ParsePOFile();
 		}
 
 	}
 
-	private void parsePOFile()
+	private void ParsePOFile()
 	{
-
-		var path = EditorUtility.OpenFilePanel(
+		//get the file path
+		var newPath = EditorUtility.OpenFilePanel(
 					"Select PO file",
 					"",
 					"po");
-		if(path.Length == 0) {
+		if(newPath.Length == 0) {
 			return;
 		}
+
+		//start importing the file
+		M10NPOCreator.ImportFile(mLanguages, newPath);
 		
-		List<string> _key = new List<string>();
-		List<string> _value = new List<string>();
-		List<string> _comment = new List<string>();
-		
-		string line;
-
-		//start parsing each line
-		using(StreamReader file = new StreamReader(path))
-		{
-			while((line = file.ReadLine()) != null)
-			{
-				if(line.Contains("msgid"))
-				{
-					line = line.Replace("msgid ", "").Replace("\"", "").Replace("\"", "");
-					if(String.IsNullOrEmpty(line) == false)
-					{
-						_key.Add(line);
-						//Debug.Log(line);
-					}
-				}
-				else if(line.Contains("msgstr"))
-				{
-					line = line.Replace("msgstr ", "").Replace("\"", "").Replace("\"", "");
-					if(String.IsNullOrEmpty(line) == false)
-					{
-						_value.Add(line);
-						//Debug.Log(line);
-					}
-				}
-				else if(line.Contains("#:"))
-				{
-					line = line.Replace("#: ", "");
-					if(String.IsNullOrEmpty(line) == false)
-					{
-						_comment.Add(line);
-						//Debug.Log(line);
-					}
-				}
-				else if(line.Contains("Language: "))
-				{
-					line = line.Replace("Language: ", "").Replace("\\n", "").Replace("\"", "").Replace("\"", "");
-					if(String.IsNullOrEmpty(line) == false)
-					{
-						mParsedLanguage = M10NEditorUtility.ISOToSystemLanguage(line);
-						//Debug.Log(mParsedLanguage.ToString());
-					}	
-				}
-			}
-		}
-
-		///done parsing now add them to the language.asset file
-		for(int i = 0; i < _key.Count; ++i) 
-		{
-			//add the key and value to the language file
-			mLanguages.SetTextEntry(mParsedLanguage, _key[i], _value[i]);
-		}
-
 		EditorUtility.SetDirty(mLanguages);
 		m_StringTableListView.ReloadTree ();
 	}
@@ -446,10 +385,10 @@ public class StringTableEditorWindow : EditorWindow {
 				string value = mLanguages[mCurrentLanguage].values[i].text;
 
 				//for each key, create an entry
-				POCreator.POEntry(key, key, value);
+				M10NPOCreator.POEntry(key, key, value);
 			}
 
-			POCreator.CreateEntryFile(mCurrentLanguage, path);
+			M10NPOCreator.CreateEntryFile(mCurrentLanguage, path);
 
 		}
 
