@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Assertions;
 
-public class MultiLanguage : EditorWindow {
+public class StringTableEditorWindow : EditorWindow {
 
 	//the language database that is selected
 	public M10NStringDatabase mLanguages;
@@ -47,7 +47,7 @@ public class MultiLanguage : EditorWindow {
 	static void ShowEditor() {
 
 		//create the editor window
-		MultiLanguage editor = EditorWindow.GetWindow<MultiLanguage>();
+		StringTableEditorWindow editor = EditorWindow.GetWindow<StringTableEditorWindow>();
 		//the editor window must have a min size
 		editor.titleContent = new GUIContent("StringTable");
 		editor.minSize = new Vector2 (400, 300);
@@ -57,13 +57,13 @@ public class MultiLanguage : EditorWindow {
 	}
 
 	public static void RepaintEditor() {
-		MultiLanguage editor = EditorWindow.GetWindow<MultiLanguage>();
+		StringTableEditorWindow editor = EditorWindow.GetWindow<StringTableEditorWindow>();
 		editor.DetectLanguageFileFromSelection ();
 		editor.Repaint();
 	}
 
 	public static void SelectItemForKey(string key) {
-		MultiLanguage editor = EditorWindow.GetWindow<MultiLanguage>();
+		StringTableEditorWindow editor = EditorWindow.GetWindow<StringTableEditorWindow>();
 		editor.DetectLanguageFileFromSelection ();
 		editor._SelectItemForKey(key);
 		editor.Repaint();

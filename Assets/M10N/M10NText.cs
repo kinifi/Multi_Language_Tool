@@ -67,6 +67,11 @@ public class M10NText : UnityEngine.UI.Text
         }
     }
 
+	public void SetArgs(params object[] args) {
+		m_reference.args = args;
+		SetVerticesDirty();
+	}
+
     protected override void OnEnable()
     {
         base.OnEnable();

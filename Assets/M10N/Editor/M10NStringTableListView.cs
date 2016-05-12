@@ -268,7 +268,7 @@ public class M10NStringTableListViewGUI : TreeViewGUI
 
 public class M10NStringTableListView
 {
-	private MultiLanguage m_editorWindow;
+	private StringTableEditorWindow m_editorWindow;
 	private M10NStringDatabase m_db;
 	private M10NStringTableDataSource m_StringTableDataSource;
 	private TreeViewState m_StringTableTreeState;
@@ -286,7 +286,7 @@ public class M10NStringTableListView
 	}
 	static Styles s_Styles;
 
-	public M10NStringTableListView (MultiLanguage editorWindow, TreeViewState treeState, M10NStringDatabase db)
+	public M10NStringTableListView (StringTableEditorWindow editorWindow, TreeViewState treeState, M10NStringDatabase db)
 	{
 		m_editorWindow = editorWindow;
 		m_db = db;

@@ -15,6 +15,8 @@ public struct M10NStringReference {
 	[SerializeField]
 	private string m_selectedKey;
 
+	private object[] m_args;
+
 	// TODO: Editor Only
 //	[SerializeField]
 //	private string m_key;
@@ -28,7 +30,21 @@ public struct M10NStringReference {
 	public string text {
 		get {
 			if(m_db == null || m_db.keys.Count < m_index || m_index < 0) return string.Empty;
-			return m_db.GetStringTable(Application.currentLanguage).values[m_index].text;
+
+			if( m_args != null ) {
+				return m_db.GetStringTable(Application.currentLanguage).values[m_index].Format(args);
+			} else {
+				return m_db.GetStringTable(Application.currentLanguage).values[m_index].text;
+			}
+		}
+	}
+
+	public object[] args {
+		get {
+			return m_args;
+		}
+		set {
+			m_args = value;
 		}
 	}
 
@@ -51,6 +67,10 @@ public struct M10NStringReference {
 			m_index = m_db.keys.IndexOf(value);
 			m_selectedKey = value;
 		}
+	}
+
+	public void SetArgs(params object[] args) {
+		this.args = args;
 	}
 
 	public string GetPluralString(long n) {
