@@ -398,6 +398,7 @@ public class StringTableEditorWindow : EditorWindow {
 
 			//tell the editor we have modified the data
 			EditorUtility.SetDirty(mLanguages);
+			Repaint();
 
 		}
 

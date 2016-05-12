@@ -1,0 +1,141 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06ab10afbf824419c93450910acff9dc, type: 3}
+  m_Name: importedLanguage
+  m_EditorClassIdentifier: 
+  keys: []
+  m_database:
+  - language: 0
+    values: []
+    isEditing: 0
+  - language: 1
+    values: []
+    isEditing: 0
+  - language: 2
+    values: []
+    isEditing: 0
+  - language: 3
+    values: []
+    isEditing: 0
+  - language: 4
+    values: []
+    isEditing: 0
+  - language: 5
+    values: []
+    isEditing: 0
+  - language: 6
+    values: []
+    isEditing: 0
+  - language: 7
+    values: []
+    isEditing: 0
+  - language: 8
+    values: []
+    isEditing: 0
+  - language: 9
+    values: []
+    isEditing: 0
+  - language: 10
+    values: []
+    isEditing: 0
+  - language: 11
+    values: []
+    isEditing: 0
+  - language: 12
+    values: []
+    isEditing: 0
+  - language: 13
+    values: []
+    isEditing: 0
+  - language: 14
+    values: []
+    isEditing: 0
+  - language: 15
+    values: []
+    isEditing: 0
+  - language: 16
+    values: []
+    isEditing: 0
+  - language: 17
+    values: []
+    isEditing: 0
+  - language: 18
+    values: []
+    isEditing: 0
+  - language: 19
+    values: []
+    isEditing: 0
+  - language: 20
+    values: []
+    isEditing: 0
+  - language: 21
+    values: []
+    isEditing: 0
+  - language: 22
+    values: []
+    isEditing: 0
+  - language: 23
+    values: []
+    isEditing: 0
+  - language: 24
+    values: []
+    isEditing: 0
+  - language: 25
+    values: []
+    isEditing: 0
+  - language: 26
+    values: []
+    isEditing: 0
+  - language: 27
+    values: []
+    isEditing: 0
+  - language: 28
+    values: []
+    isEditing: 0
+  - language: 29
+    values: []
+    isEditing: 0
+  - language: 30
+    values: []
+    isEditing: 0
+  - language: 31
+    values: []
+    isEditing: 0
+  - language: 32
+    values: []
+    isEditing: 0
+  - language: 33
+    values: []
+    isEditing: 0
+  - language: 34
+    values: []
+    isEditing: 0
+  - language: 35
+    values: []
+    isEditing: 0
+  - language: 36
+    values: []
+    isEditing: 0
+  - language: 37
+    values: []
+    isEditing: 0
+  - language: 38
+    values: []
+    isEditing: 0
+  - language: 39
+    values: []
+    isEditing: 0
+  - language: 40
+    values: []
+    isEditing: 0
+  - language: 41
+    values: []
+    isEditing: 0
