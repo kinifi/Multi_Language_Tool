@@ -12,20 +12,22 @@ public class POCreator {
 
 	//setup text #1 string
 	private static string PoInitEntry = 
+	
+		"msgid" + '"' + '"' +
+		"msgstr"  + '"' + '"' +
+		'"' + "Project-Id-Version: Report-Msgid-Bugs-To: POT-Creation-Date: 05/12/2016 "  + '"' +
+		'"' + "12:42:48\\n" + '"' +
+		'"' + "PO-Revision-Date: \\n" + '"' +
+		'"' + "Last-Translator: \\n" + '"' +
+		'"' + "Language-Team: \\n" + '"' +
+		'"' + "Language: ja\\n" + '"' +
+		'"' + "MIME-Version: 1.0\\n" + '"' +
+		'"' + "Content-Type: text/plain; charset=UTF-8\\n" + '"' +
+		'"' + "Content-Transfer-Encoding: 8bit\\n" + '"' +
+		'"' + "X-Generator: Unity3D" + Application.unityVersion + "\\n" + '"' +
+		'"' + "POT-Creation-Date: \\n" + '"';
 
-		"msgid " + '"' + '"' + "\n" +
-		"msgstr " +  '"' + '"' + "\n" +
-		'"' + "Project-Id-Version: " + '"' + "\n" +
-		'"' + "Report-Msgid-Bugs-To: " + '"' + "\n" +
-		'"' + "POT-Creation-Date: " + DateTime.UtcNow + '"' + "\n" +
-		'"' + "PO-Revision-Date:" + '"' + "\n" +
-		'"' + "Last-Translator: " + '"' + "\n" +
-		'"' + "Language-Team: " + '"' + "\n" +
-		'"' + "Language: ja" + '"' + "\n" +
-		'"' + "MIME-Version: 1.0" + '"' + "\n" +
-		'"' + "Content-Type: text/plain; charset=UTF-8" + '"' + "\n" +
-		'"' + "Content-Transfer-Encoding: 8bit" + '"' + "\n" +
-		'"' + "X-Generator: Unity3D " + Application.unityVersion + '"' + "" + '"' + "\n";
+
 
 	/// <summary>
 	/// Creates the PO Language file

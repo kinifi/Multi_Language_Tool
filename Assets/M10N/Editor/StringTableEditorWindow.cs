@@ -345,13 +345,13 @@ public class StringTableEditorWindow : EditorWindow {
 			for(int i = 0; i < mLanguages.keys.Count; ++i) 
 			{
 				string key = mLanguages.keys[i];
-				string value = mLanguages.GetStringTable(mCurrentReferenceLanguage).values[i].text;
+				string value = mLanguages.GetStringTable(mCurrentLanguage).values[i].text;
 
 				//for each key, create an entry
 				POCreator.POEntry(key, key, value);
 			}
 
-			POCreator.CreateEntryFile(mCurrentReferenceLanguage, path);
+			POCreator.CreateEntryFile(mCurrentLanguage, path);
 
 		}
 
