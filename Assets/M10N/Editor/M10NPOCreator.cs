@@ -6,10 +6,12 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
-public class POCreator {
+public class M10NPOCreator {
 
 	private static List<string> mPOEntries = new List<string>();
 
+
+	private	static SystemLanguage mParsedLanguage;
 
 	/// <summary>
 	/// Creates the PO Language file
@@ -93,9 +95,61 @@ public class POCreator {
 		mPOEntries.Add(newEntry);
 	}
 
-	public static void ImportFile(string path)
+	public static void ImportFile(M10NStringDatabase mLanguages, string newPath)
 	{
 
+		List<string> _key = new List<string>();
+		List<string> _value = new List<string>();
+		List<string> _comment = new List<string>();
+		
+		string line;
+
+		//start parsing each line
+		using(StreamReader file = new StreamReader(newPath))
+		{
+			while((line = file.ReadLine()) != null)
+			{
+				if(line.Contains("msgid"))
+				{
+					line = line.Replace("msgid ", "").Replace("\"", "").Replace("\"", "");
+					if(String.IsNullOrEmpty(line) == false)
+					{
+						_key.Add(line);
+					}
+				}
+				else if(line.Contains("msgstr"))
+				{
+					line = line.Replace("msgstr ", "").Replace("\"", "").Replace("\"", "");
+					if(String.IsNullOrEmpty(line) == false)
+					{
+						_value.Add(line);
+					}
+				}
+				else if(line.Contains("#:"))
+				{
+					line = line.Replace("#: ", "");
+					if(String.IsNullOrEmpty(line) == false)
+					{
+						_comment.Add(line);
+					}
+				}
+				else if(line.Contains("Language: "))
+				{
+					line = line.Replace("Language: ", "").Replace("\\n", "").Replace("\"", "").Replace("\"", "");
+					if(String.IsNullOrEmpty(line) == false)
+					{
+						mParsedLanguage = M10NEditorUtility.ISOToSystemLanguage(line);
+					}	
+				}
+			}
+		}
+
+		///done parsing now add them to the language.asset file
+		for(int i = 0; i < _key.Count; ++i)
+		{
+			//add the key and value to the language file
+			mLanguages.SetTextEntry(mParsedLanguage, _key[i], _value[i]);
+		}
 
 	}
 
