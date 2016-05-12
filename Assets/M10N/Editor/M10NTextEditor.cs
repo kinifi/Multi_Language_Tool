@@ -62,7 +62,7 @@ public class M10NTextEditor : UnityEditor.UI.GraphicEditor
 
 		serializedObject.ApplyModifiedProperties();
 
-		StringTableEditorWindow.SelectItemForKey(key);
+		StringTableEditorWindow.SelectItemForKey(key, true);
 	}
 
 	private void DoM10NStringReferenceGUI() {

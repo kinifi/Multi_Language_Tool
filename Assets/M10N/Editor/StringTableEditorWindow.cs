@@ -64,15 +64,18 @@ public class StringTableEditorWindow : EditorWindow {
 		editor.Repaint();
 	}
 
-	public static void SelectItemForKey(string key) {
+	public static void SelectItemForKey(string key, bool reload) {
 		StringTableEditorWindow editor = EditorWindow.GetWindow<StringTableEditorWindow>();
 		editor.DetectLanguageFileFromSelection ();
-		editor._SelectItemForKey(key);
+		editor._SelectItemForKey(key, reload);
 		editor.Repaint();
 	}
 
-	private void _SelectItemForKey(string key) {
+	private void _SelectItemForKey(string key, bool reload) {
 		if (m_StringTableListView != null) {
+			if(reload) {
+				m_StringTableListView.ReloadTree();
+			}
 			m_StringTableListView.SelectItemForKey(key);
 		}
 	}
@@ -348,67 +351,69 @@ public class StringTableEditorWindow : EditorWindow {
 					"Select PO file",
 					"",
 					"po");
-			if(path.Length == 0)
-				return;
+		if(path.Length == 0) {
+			return;
+		}
+		
+		List<string> _key = new List<string>();
+		List<string> _value = new List<string>();
+		List<string> _comment = new List<string>();
+		
+		string line;
 
-			
-			List<string> _key = new List<string>();
-			List<string> _value = new List<string>();
-			List<string> _comment = new List<string>();
-			
-			string line;
-
-			//start parsing each line
-			using(StreamReader file = new StreamReader(path))
+		//start parsing each line
+		using(StreamReader file = new StreamReader(path))
+		{
+			while((line = file.ReadLine()) != null)
 			{
-				while((line = file.ReadLine()) != null)
+				if(line.Contains("msgid"))
 				{
-					if(line.Contains("msgid"))
+					line = line.Replace("msgid ", "").Replace("\"", "").Replace("\"", "");
+					if(String.IsNullOrEmpty(line) == false)
 					{
-						line = line.Replace("msgid ", "").Replace("\"", "").Replace("\"", "");
-						if(String.IsNullOrEmpty(line) == false)
-						{
-							_key.Add(line);
-							//Debug.Log(line);
-						}
-					}
-					else if(line.Contains("msgstr"))
-					{
-						line = line.Replace("msgstr ", "").Replace("\"", "").Replace("\"", "");
-						if(String.IsNullOrEmpty(line) == false)
-						{
-							_value.Add(line);
-							//Debug.Log(line);
-						}
-					}
-					else if(line.Contains("#:"))
-					{
-						line = line.Replace("#: ", "");
-						if(String.IsNullOrEmpty(line) == false)
-						{
-							_comment.Add(line);
-							//Debug.Log(line);
-						}
-					}
-					else if(line.Contains("Language: "))
-					{
-						line = line.Replace("Language: ", "").Replace("\\n", "").Replace("\"", "").Replace("\"", "");
-						if(String.IsNullOrEmpty(line) == false)
-						{
-							mParsedLanguage = M10NEditorUtility.ISOToSystemLanguage(line);
-							//Debug.Log(mParsedLanguage.ToString());
-						}	
+						_key.Add(line);
+						//Debug.Log(line);
 					}
 				}
+				else if(line.Contains("msgstr"))
+				{
+					line = line.Replace("msgstr ", "").Replace("\"", "").Replace("\"", "");
+					if(String.IsNullOrEmpty(line) == false)
+					{
+						_value.Add(line);
+						//Debug.Log(line);
+					}
+				}
+				else if(line.Contains("#:"))
+				{
+					line = line.Replace("#: ", "");
+					if(String.IsNullOrEmpty(line) == false)
+					{
+						_comment.Add(line);
+						//Debug.Log(line);
+					}
+				}
+				else if(line.Contains("Language: "))
+				{
+					line = line.Replace("Language: ", "").Replace("\\n", "").Replace("\"", "").Replace("\"", "");
+					if(String.IsNullOrEmpty(line) == false)
+					{
+						mParsedLanguage = M10NEditorUtility.ISOToSystemLanguage(line);
+						//Debug.Log(mParsedLanguage.ToString());
+					}	
+				}
 			}
+		}
 
-			///done parsing now add them to the language.asset file
-			for(int i = 0; i < _key.Count; ++i) 
-			{
-				//add the key and value to the language file
-				mLanguages.SetTextEntry(mParsedLanguage, _key[i], _value[i]);
-			}
+		///done parsing now add them to the language.asset file
+		for(int i = 0; i < _key.Count; ++i) 
+		{
+			//add the key and value to the language file
+			mLanguages.SetTextEntry(mParsedLanguage, _key[i], _value[i]);
+		}
 
+		EditorUtility.SetDirty(mLanguages);
+		m_StringTableListView.ReloadTree ();
 	}
 
 	//exports the language translations to a .po file
@@ -560,9 +565,7 @@ public class StringTableEditorWindow : EditorWindow {
 			if (m_StringTableListView != null) {
 				m_StringTableListView.SelectItemForKey(focusKey);
 			}
-		} else {
-			
-		}
+		} 
 	}
 
 	public void OnFocus ()
