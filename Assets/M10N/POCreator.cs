@@ -31,7 +31,7 @@ public class POCreator {
 	/// Creates the PO Language file
 	/// </summary>
 	/// <param name="language">Name of the file</param>
-	public static void CreateEntryFile (SystemLanguage language)
+	public static void CreateEntryFile (SystemLanguage language, string path)
 	{
 
 		if(mPOEntries.Count <= 0)
@@ -48,7 +48,7 @@ public class POCreator {
 				builder.Append(mPOEntries[i]);
 			}
 
-			File.WriteAllText(Application.dataPath + "/" + language.ToString().ToLower() + ".po", builder.ToString());
+			File.WriteAllText(path, builder.ToString());
 			AssetDatabase.Refresh();
 			mPOEntries = new List<string>();
 			Debug.Log(language + ".po file created");
