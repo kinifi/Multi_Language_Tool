@@ -37,6 +37,8 @@ public class StringTableEditorWindow : EditorWindow {
 
 	private bool m_isInitialized;
 
+	private	SystemLanguage mParsedLanguage;
+
 	public class Styles {
 		public readonly int kToolbarHeight = 20;
 		public readonly int kEditorPaneHeight = 400;
@@ -50,7 +52,7 @@ public class StringTableEditorWindow : EditorWindow {
 		StringTableEditorWindow editor = EditorWindow.GetWindow<StringTableEditorWindow>();
 		//the editor window must have a min size
 		editor.titleContent = new GUIContent("StringTable");
-		editor.minSize = new Vector2 (400, 300);
+		editor.minSize = new Vector2 (800, 600);
 		//call the init method after we create our window
 		editor.Init();
 
@@ -202,7 +204,8 @@ public class StringTableEditorWindow : EditorWindow {
 
         GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
         
-        GUILayout.Label("show comment here");
+        GUILayout.Label("comment displays here", "HelpBox");
+        GUILayout.TextArea("write a new comment here. When Saved, this will overwrite the above comment", GUILayout.Height(100));
         
         GUILayout.EndArea();
 
@@ -295,6 +298,8 @@ public class StringTableEditorWindow : EditorWindow {
 
 		//export the selected language
 		DoExportLanguageFileButton();
+		//import the selected po file 
+		DoImportPOFile();
 
 		GUILayout.EndHorizontal();
 
@@ -321,6 +326,84 @@ public class StringTableEditorWindow : EditorWindow {
 
 	}
 
+	public void DoImportPOFile ()
+	{
+		if(GUILayout.Button("Import", EditorStyles.toolbarButton, GUILayout.Width(50)))
+		{
+			var path = EditorUtility.OpenFilePanel(
+					"Select PO file",
+					"",
+					"po");
+			if(path.Length == 0)
+				return;
+
+			//Debug.Log(path);
+
+			List<string> _key = new List<string>();
+			List<string> _value = new List<string>();
+			List<string> _comment = new List<string>();
+			
+			string line;
+
+			//start parsing each line
+			using(StreamReader file = new StreamReader(path))
+			{
+				while((line = file.ReadLine()) != null)
+				{
+					if(line.Contains("msgid"))
+					{
+						line = line.Replace("msgid ", "").Replace("\"", "").Replace("\"", "");
+						if(String.IsNullOrEmpty(line) == false)
+						{
+							_key.Add(line);
+							//Debug.Log(line);
+						}
+					}
+					else if(line.Contains("msgstr"))
+					{
+						line = line.Replace("msgstr ", "").Replace("\"", "").Replace("\"", "");
+						if(String.IsNullOrEmpty(line) == false)
+						{
+							_value.Add(line);
+							//Debug.Log(line);
+						}
+					}
+					else if(line.Contains("#:"))
+					{
+						line = line.Replace("#: ", "");
+						if(String.IsNullOrEmpty(line) == false)
+						{
+							_comment.Add(line);
+							//Debug.Log(line);
+						}
+					}
+					else if(line.Contains("Language: "))
+					{
+						line = line.Replace("Language: ", "").Replace("\\n", "").Replace("\"", "").Replace("\"", "");
+						if(String.IsNullOrEmpty(line) == false)
+						{
+							mParsedLanguage = M10NEditorUtility.ISOToSystemLanguage(line);
+							//Debug.Log(mParsedLanguage.ToString());
+						}	
+					}
+				}
+			}
+
+			///done parsing now add them to the language.asset file
+			for(int i = 0; i < _key.Count; ++i) 
+			{
+				mLanguages.SetTextEntry(mParsedLanguage, _key[i], _value[i]);
+				//Debug.Log(mParsedLanguage.ToString() + " | Key: " + _key[i] + " | Value: " + _value[i]);
+			}
+
+			//tell the editor we have modified the data
+			EditorUtility.SetDirty(mLanguages);
+			Repaint();
+
+		}
+
+	}
+
 	//exports the language translations to a .po file
 	public void DoExportLanguageFileButton ()
 	{
@@ -335,6 +418,9 @@ public class StringTableEditorWindow : EditorWindow {
 					"",
 					mCurrentLanguage.ToString() + ".po",
 					"po");
+			//check if the file path is zero 
+			if(path.Length != 0)
+				return;
 
 			Debug.Log("Save Path: " + path);
 
