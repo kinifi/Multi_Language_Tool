@@ -10,24 +10,6 @@ public class POCreator {
 
 	private static List<string> mPOEntries = new List<string>();
 
-	//setup text #1 string
-	private static string PoInitEntry = 
-	
-		"msgid" + '"' + '"' +
-		"msgstr"  + '"' + '"' +
-		'"' + "Project-Id-Version: Report-Msgid-Bugs-To: POT-Creation-Date: 05/12/2016 "  + '"' +
-		'"' + "12:42:48\\n" + '"' +
-		'"' + "PO-Revision-Date: \\n" + '"' +
-		'"' + "Last-Translator: \\n" + '"' +
-		'"' + "Language-Team: \\n" + '"' +
-		'"' + "Language: ja\\n" + '"' +
-		'"' + "MIME-Version: 1.0\\n" + '"' +
-		'"' + "Content-Type: text/plain; charset=UTF-8\\n" + '"' +
-		'"' + "Content-Transfer-Encoding: 8bit\\n" + '"' +
-		'"' + "X-Generator: Unity3D" + Application.unityVersion + "\\n" + '"' +
-		'"' + "POT-Creation-Date: \\n" + '"';
-
-
 
 	/// <summary>
 	/// Creates the PO Language file
@@ -43,7 +25,7 @@ public class POCreator {
 		else
 		{
 			StringBuilder builder = new StringBuilder();
-			builder.Append(PoInitEntry).AppendLine().AppendLine();
+			builder.Append(PoInitEntry(language)).AppendLine().AppendLine();
 
 			for (int i = 0; i < mPOEntries.Count; i++)
 			{
@@ -56,6 +38,32 @@ public class POCreator {
 			Debug.Log(language + ".po file created");
 		}
 
+	}
+
+	private static string PoInitEntry (SystemLanguage language)
+	{
+		
+		string newLang = language.ToString().Substring(0, 2).ToLower();
+		Debug.Log("Language: " + newLang);
+
+		string PoInitEntry = 
+
+		"msgid " + '"' + '"' + "\n" +
+		"msgstr "  + '"' + '"' + "\n" +
+		'"' + "Project-Id-Version: " + '"' + "\n" + 
+		'"' + "Report-Msgid-Bugs-To: " + '"' + "\n" + 
+		'"' + "POT-Creation-Date: 05/12/2016" + "\\n" + '"' +  "\n" +
+		'"' + "PO-Revision-Date: \\n" + '"' + "\n" +
+		'"' + "Last-Translator: \\n" + '"' + "\n" +
+		'"' + "Language-Team: \\n" + '"' + "\n" +
+		'"' + "Language: " + newLang + "\\n" + '"' + "\n" +
+		'"' + "MIME-Version: 1.0\\n" + '"' + "\n" +
+		'"' + "Content-Type: text/plain; charset=UTF-8\\n" + '"' + "\n" +
+		'"' + "Content-Transfer-Encoding: 8bit\\n" + '"' + "\n" +
+		'"' + "X-Generator: Unity3D" + Application.unityVersion + "\\n" + '"' + "\n" +
+		'"' + "POT-Creation-Date: " + '"';
+
+		return PoInitEntry;
 	}
 
 	//create the po file
