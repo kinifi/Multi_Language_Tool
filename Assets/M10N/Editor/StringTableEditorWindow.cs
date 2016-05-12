@@ -330,15 +330,28 @@ public class StringTableEditorWindow : EditorWindow {
 	{
 		if(GUILayout.Button("Import", EditorStyles.toolbarButton, GUILayout.Width(50)))
 		{
-			var path = EditorUtility.OpenFilePanel(
+
+			parsePOFile();
+
+			//tell the editor we have modified the data
+			EditorUtility.SetDirty(mLanguages);
+			Repaint();
+
+		}
+
+	}
+
+	private void parsePOFile()
+	{
+
+		var path = EditorUtility.OpenFilePanel(
 					"Select PO file",
 					"",
 					"po");
 			if(path.Length == 0)
 				return;
 
-			//Debug.Log(path);
-
+			
 			List<string> _key = new List<string>();
 			List<string> _value = new List<string>();
 			List<string> _comment = new List<string>();
@@ -392,15 +405,9 @@ public class StringTableEditorWindow : EditorWindow {
 			///done parsing now add them to the language.asset file
 			for(int i = 0; i < _key.Count; ++i) 
 			{
+				//add the key and value to the language file
 				mLanguages.SetTextEntry(mParsedLanguage, _key[i], _value[i]);
-				//Debug.Log(mParsedLanguage.ToString() + " | Key: " + _key[i] + " | Value: " + _value[i]);
 			}
-
-			//tell the editor we have modified the data
-			EditorUtility.SetDirty(mLanguages);
-			Repaint();
-
-		}
 
 	}
 
