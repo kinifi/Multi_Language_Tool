@@ -654,7 +654,7 @@ MonoBehaviour:
   m_reference:
     m_db: {fileID: 11400000, guid: e480dd65ac165459a8139788487976d4, type: 2}
     m_index: 1
-    m_selectedKey: playButton
+    m_selectedKey: playbutton
 --- !u!222 &397519503
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1243,8 +1243,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -14, y: 160}
-  m_SizeDelta: {x: 832, y: 175}
+  m_AnchoredPosition: {x: -10, y: 156}
+  m_SizeDelta: {x: 841, y: 184}
   m_Pivot: {x: 0.5, y: 0.50000006}
 --- !u!114 &1202405849
 MonoBehaviour:

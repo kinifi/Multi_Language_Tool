@@ -11,9 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ab10afbf824419c93450910acff9dc, type: 3}
   m_Name: GameLanguages
   m_EditorClassIdentifier: 
-  keys:
+  m_keys:
   - gametitle
-  - playButton
+  - playbutton
   - score
   - gameover
   - pauseText
