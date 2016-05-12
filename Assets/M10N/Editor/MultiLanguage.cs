@@ -43,12 +43,13 @@ public class MultiLanguage : EditorWindow {
 	}
 	static Styles s_Styles;
 
-	[MenuItem("Window/Multi-Language %l")]
+	[MenuItem("Window/StringTable %l")]
 	static void ShowEditor() {
 
 		//create the editor window
 		MultiLanguage editor = EditorWindow.GetWindow<MultiLanguage>();
 		//the editor window must have a min size
+		editor.titleContent = new GUIContent("StringTable");
 		editor.minSize = new Vector2 (400, 300);
 		//call the init method after we create our window
 		editor.Init();
@@ -433,6 +434,9 @@ public class MultiLanguage : EditorWindow {
 		if (Selection.activeObject is M10NStringDatabase && EditorUtility.IsPersistent(Selection.activeObject))
 		{
 			selectedAsset = Selection.activeObject as M10NStringDatabase;
+			if(keySelected >= 0 && mLanguages != null) {
+				focusKey = mLanguages.keys[keySelected];
+			}
 		}
 
 		if (Selection.activeGameObject)
@@ -451,7 +455,6 @@ public class MultiLanguage : EditorWindow {
 			mLanguages = selectedAsset;
 			if (m_StringTableListView != null) {
 				m_StringTableListView.OnM10NStringDatabaseChanged(selectedAsset);
-				//m_StringTableListView.InitSelection (true);
 			}
 		}
 
@@ -459,6 +462,8 @@ public class MultiLanguage : EditorWindow {
 			if (m_StringTableListView != null) {
 				m_StringTableListView.SelectItemForKey(focusKey);
 			}
+		} else {
+			
 		}
 	}
 

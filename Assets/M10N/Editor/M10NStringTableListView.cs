@@ -335,7 +335,13 @@ public class M10NStringTableListView
 		if( m_db ) {
 			int[] sel = new int[1];
 			sel[0] = m_db.keys.IndexOf(key);
-			m_StringTableTree.SetSelection(sel, true, true);
+			if(sel[0] > 0) {
+				m_StringTableTree.SetSelection(sel, true, true);
+			} 
+			// did not find key
+			else {
+				m_StringTableTree.SetSelection(new int[0], true);
+			}
 			m_StringTableTree.NotifyListenersThatSelectionChanged();
 		}
 	}
@@ -547,8 +553,7 @@ public class M10NStringTableListView
 			return;
 		}
 
-//		var groups = m_Controller.CachedSelection;
-//		m_AudioGroupTree.SetSelection ((from x in groups select x.GetInstanceID ()).ToArray (), revealSelectionAndFrameLastSelected);
+		m_StringTableTree.SetSelection(new int[0], revealSelectionAndFrameLastSelected);
 	}
 
 //	public float GetTotalHeight ()
