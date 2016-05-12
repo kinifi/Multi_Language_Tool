@@ -64,33 +64,26 @@ public class M10NTextEditor : UnityEditor.UI.GraphicEditor
 
 		StringTableEditorWindow.SelectItemForKey(key, true);
 	}
+		
 
 	private void DoM10NStringReferenceGUI() {
 
 		M10NStringDatabase db = m_M10NDB.objectReferenceValue as M10NStringDatabase;
 
-//		string[] keyArray = null;
-//
-//		if( db != null ) {
-//			keyArray = db.keys.ToArray();
-//		} 
-
 		//select the language you want to display
+		EditorGUILayout.LabelField("Key", EditorStyles.boldLabel);
+
 		EditorGUILayout.BeginHorizontal();
-		EditorGUILayout.LabelField("Key:");
-//		if(keyArray != null) {
-//			GUI.changed = false;
-//			m_M10NIndex.intValue = EditorGUILayout.Popup(m_M10NIndex.intValue, keyArray);
-//			if(GUI.changed) {
-//				m_M10NSelectedKey.stringValue = db.keys[m_M10NIndex.intValue];
-//				StringTableEditorWindow.SelectItemForKey(m_M10NSelectedKey.stringValue);
-//				//SceneView.RepaintAll();
-//			}
-//		}
+
+		float vspace = EditorGUIUtility.standardVerticalSpacing;
+		float lineH = EditorGUIUtility.singleLineHeight;
+
+		GUILayoutUtility.GetRect(vspace, vspace, lineH, lineH);
 
 		m_keyGUI.OnKeyGUI(db, m_M10NSelectedKey.stringValue);
 
 		EditorGUILayout.EndHorizontal();
+
 		if(keyMissing) {
 			EditorGUILayout.LabelField("Key was:" + m_M10NSelectedKey.stringValue);
 			if(GUILayout.Button("Add key to current database")) {
@@ -100,9 +93,15 @@ public class M10NTextEditor : UnityEditor.UI.GraphicEditor
 			}
 		}
 
-		EditorGUILayout.LabelField("Text:", EditorStyles.boldLabel);
+		GUILayoutUtility.GetRect(vspace, vspace, lineH, lineH);
+
+		EditorGUILayout.LabelField("Text", EditorStyles.boldLabel);
 		if(db != null && !keyMissing) {
-			EditorGUILayout.LabelField(db.current.values[m_M10NIndex.intValue].text);
+			EditorGUILayout.BeginHorizontal();
+			GUILayoutUtility.GetRect(vspace, vspace, lineH, lineH);
+			GUILayout.TextArea(db.current.values[m_M10NIndex.intValue].text, GUILayout.Height(60));
+			//EditorGUILayout.LabelField(db.current.values[m_M10NIndex.intValue].text);
+			EditorGUILayout.EndHorizontal();
 		}
 	}
 

@@ -19,13 +19,13 @@ namespace CompleteProject
             // Reset the score.
             score = 0;
 
-			text.SetArgs(score, "hello");
+			text.SetArgs(score);
         }
 
 
         void Update ()
         {
-			text.SetArgs(score, "hello");
+			text.SetArgs(score);
             // Set the displayed text to be the word "Score" followed by the score value.
 //            text.text += (": " + score);
 //			text.SetAllDirty();
