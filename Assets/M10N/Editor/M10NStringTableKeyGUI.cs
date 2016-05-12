@@ -19,7 +19,7 @@ namespace UnityEditor
 		bool m_CurrentChanged = false;
 		bool m_ChangeWasAdd = false;
 		bool m_IgnoreNextAssetLabelsChangedCall = false;
-		
+
 		private static int s_MaxShownLabels = 10;
 
 		public Action<int, string> selectionChangedDelegate;
@@ -72,6 +72,8 @@ namespace UnityEditor
 
 		public void KeyListSelectionCallback (PopupList.ListElement element)
 		{
+			m_Keys.DeselectAll();
+
 			m_ChangedKey = element.text.ToLower();
 			element.selected = !element.selected;
 			m_ChangeWasAdd = element.selected;
