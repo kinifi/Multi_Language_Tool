@@ -106,14 +106,10 @@ public class M10NStringTableDataSource : TreeViewDataSource
 	private void AddAllNodes()
 	{
 		var newRoot = new TreeViewItem(-1, -1, null, "Root");
-		for (int i = 0; i < m_db.keys.Count; ++i)
-		{
-//			Debug.Log("[M10N LV]added child " + i + ":" + m_db.keys[i]);
-			//int uniqueNodeID = GetUniqueNodeID();
-			var node = new M10NStringTableListViewNode(i, 0, m_RootItem, m_db.keys[i], i);
+		for (int i = 0; i < m_db.Count; ++i) {
+			var node = new M10NStringTableListViewNode(i, 0, m_RootItem, m_db[i], i);
 			newRoot.AddChild(node);
 		}
-
 		m_RootItem = newRoot;
 	}
 
@@ -200,7 +196,7 @@ public class M10NStringTableListViewGUI : TreeViewGUI
 		var stringTable = item as M10NStringTableListViewNode;
 		if (stringTable != null && m_db != null)
 		{
-			string valueString = m_db.GetStringTable(currentEditingLanguage).values[stringTable.stringTableIndex].text;
+			string valueString = m_db[currentEditingLanguage].values[stringTable.stringTableIndex].text;
 			GUI.Label(valueRect, valueString);
 		}
 	}
@@ -233,7 +229,7 @@ public class M10NStringTableListViewGUI : TreeViewGUI
 			if (stringTableNode != null)
 			{
 				Assert.IsNotNull(m_db);
-				m_db.keys[instanceID] = name;
+				m_db[instanceID] = name;
 //				ObjectNames.SetNameSmartWithInstanceID(instanceID, name);
 //				foreach (var effect in audioNode.group.effects)
 //					effect.ClearCachedDisplayName ();
@@ -334,7 +330,7 @@ public class M10NStringTableListView
 	public void SelectItemForKey(string key) {
 		if( m_db ) {
 			int[] sel = new int[1];
-			sel[0] = m_db.keys.IndexOf(key);
+			sel[0] = m_db.IndexOfKey(key);
 			if(sel[0] > 0) {
 				m_StringTableTree.SetSelection(sel, true, true);
 			} 

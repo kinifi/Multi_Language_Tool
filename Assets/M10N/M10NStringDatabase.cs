@@ -10,11 +10,38 @@ public class M10NStringDatabase : ScriptableObject {
 
 	// 
 	[SerializeField]
-	public List<string> keys;
+	private List<string> m_keys;
 
 	// TODO: make it flat
 	[SerializeField]
 	private M10NStringTable[] m_database;
+
+	public string this[int i] {
+		get {
+			return m_keys[i];
+		}
+		set {
+			m_keys[i] = value;
+		}
+	}
+
+	public int Count {
+		get {
+			return m_keys.Count;
+		}
+	}
+
+	public M10NStringTable this[SystemLanguage l] {
+		get {
+			return m_database[(int)l];
+		}
+	}
+
+	public M10NStringTable current {
+		get {
+			return m_database[(int)Application.currentLanguage];
+		}
+	}
 
 	public int languageCount {
 		get {
@@ -54,10 +81,18 @@ public class M10NStringDatabase : ScriptableObject {
 			}
 		}
 
-		if( keys == null )
+		if( m_keys == null )
 		{
-			keys = new List<string>();
+			m_keys = new List<string>();
 		}
+	}
+
+	public bool ContainsKey(string key) {
+		return m_keys.Contains(key.ToLower());
+	}
+
+	public int IndexOfKey(string key) {
+		return m_keys.IndexOf(key.ToLower());
 	}
 
 	public void AddLanguage( SystemLanguage lang ) {
@@ -70,19 +105,21 @@ public class M10NStringDatabase : ScriptableObject {
 		m_database[(int)lang] = null;
 	}
 
-	public M10NStringTable GetStringTable( SystemLanguage lang ) {
-		return m_database[(int)lang];
-	}
-
-	public M10NStringTable GetStringTable() {
-		return m_database[(int)Application.currentLanguage];
-	}
+//	public M10NStringTable GetStringTable( SystemLanguage lang ) {
+//		return m_database[(int)lang];
+//	}
+//
+//	public M10NStringTable GetStringTable() {
+//		return m_database[(int)Application.currentLanguage];
+//	}
 
 	public void AddTextEntry(string key) {
 		Assert.IsNotNull(key);
 
-		if( !keys.Contains(key) ) {
-			keys.Add(key);
+		key = key.ToLower();
+
+		if( !m_keys.Contains(key) ) {
+			m_keys.Add(key);
 		}
 
 		for(int i = 0; i < m_database.Length; ++i) {
@@ -90,7 +127,7 @@ public class M10NStringDatabase : ScriptableObject {
 			if( m_database[i] == null ) {
 				continue;
 			}
-			m_database[i].EnsureValuesForKeys(keys.Count);
+			m_database[i].EnsureValuesForKeys(m_keys.Count);
 		}
 	}
 
@@ -100,12 +137,13 @@ public class M10NStringDatabase : ScriptableObject {
 		Assert.IsNotNull(m_database[(int)lang]);
 
 		int index = 0;
+		key = key.ToLower();
 
-		if( !keys.Contains(key) ) {
-			index = keys.Count;
-			keys.Add(key);
+		if( !m_keys.Contains(key) ) {
+			index = m_keys.Count;
+			m_keys.Add(key);
 		} else {
-			index = keys.IndexOf(key);
+			index = m_keys.IndexOf(key);
 		}
 
 		for(int i = 0; i < m_database.Length; ++i) {
@@ -113,7 +151,7 @@ public class M10NStringDatabase : ScriptableObject {
 			if( m_database[i] == null ) {
 				continue;
 			}
-			m_database[i].EnsureValuesForKeys(keys.Count);
+			m_database[i].EnsureValuesForKeys(m_keys.Count);
 		}
 
 		m_database[(int)lang].values[index].text = value;
@@ -122,12 +160,14 @@ public class M10NStringDatabase : ScriptableObject {
 	public void RemoveTextEntry(string key) {
 		Assert.IsNotNull(key);
 
-		if( !keys.Contains(key) ) {
+		key = key.ToLower();
+
+		if( !m_keys.Contains(key) ) {
 			return;
 		}
 
-		int index = keys.IndexOf(key);
-		keys.RemoveAt(index);
+		int index = m_keys.IndexOf(key);
+		m_keys.RemoveAt(index);
 
 		for(int i = 0; i < m_database.Length; ++i) {
 
@@ -142,12 +182,15 @@ public class M10NStringDatabase : ScriptableObject {
 		Assert.IsNotNull(oldKey);
 		Assert.IsNotNull(newKey);
 
-		if( !keys.Contains(oldKey) ) {
+		oldKey = oldKey.ToLower();
+		newKey = newKey.ToLower();
+
+		if( !m_keys.Contains(oldKey) ) {
 			return;
 		}
 
-		int index = keys.IndexOf(oldKey);
+		int index = m_keys.IndexOf(oldKey);
 
-		keys[index] = newKey;
+		m_keys[index] = newKey;
 	}
 }

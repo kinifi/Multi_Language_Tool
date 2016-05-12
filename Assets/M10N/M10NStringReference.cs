@@ -29,12 +29,12 @@ public struct M10NStringReference {
 
 	public string text {
 		get {
-			if(m_db == null || m_db.keys.Count < m_index || m_index < 0) return string.Empty;
+			if(m_db == null || m_db.Count < m_index || m_index < 0) return string.Empty;
 
 			if( m_args != null ) {
-				return m_db.GetStringTable(Application.currentLanguage).values[m_index].Format(args);
+				return m_db.current.values[m_index].Format(args);
 			} else {
-				return m_db.GetStringTable(Application.currentLanguage).values[m_index].text;
+				return m_db.current.values[m_index].text;
 			}
 		}
 	}
@@ -59,12 +59,12 @@ public struct M10NStringReference {
 
 	public string key {
 		get {
-			if(m_db == null || m_db.keys.Count < m_index || m_index < 0) return string.Empty;
-			return m_db.keys[m_index];
+			if(m_db == null || m_db.Count < m_index || m_index < 0) return string.Empty;
+			return m_db[m_index];
 		}
 		set {
-			Assert.IsTrue(m_db.keys.Contains(value));
-			m_index = m_db.keys.IndexOf(value);
+			Assert.IsTrue(m_db.ContainsKey(value));
+			m_index = m_db.IndexOfKey(value);
 			m_selectedKey = value;
 		}
 	}
@@ -74,14 +74,14 @@ public struct M10NStringReference {
 	}
 
 	public string GetPluralString(long n) {
-		return m_db.GetStringTable(Application.currentLanguage).values[m_index].GetPluralString(n);
+		return m_db.current.values[m_index].GetPluralString(n);
 	}
 
 	public string Format(object[] args) {
-		return m_db.GetStringTable(Application.currentLanguage).values[m_index].Format(args);
+		return m_db.current.values[m_index].Format(args);
 	}
 
 	public string PluralFormat(long n) {
-		return m_db.GetStringTable(Application.currentLanguage).values[m_index].PluralFormat(n);
+		return m_db.current.values[m_index].PluralFormat(n);
 	}
 }

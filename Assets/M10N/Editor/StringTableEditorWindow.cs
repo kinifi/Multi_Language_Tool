@@ -226,11 +226,11 @@ public class StringTableEditorWindow : EditorWindow {
 		GUILayout.Space(20);
 
 		string key = string.Empty;
-		bool isValidKeySelected = mLanguages.keys.Count > keySelected && keySelected >= 0;
+		bool isValidKeySelected = mLanguages.Count > keySelected && keySelected >= 0;
 		if(isValidKeySelected) {
-			key = mLanguages.keys[keySelected];
-			mReferenceTextValue = mLanguages.GetStringTable(mCurrentReferenceLanguage).values[keySelected].text;
-			mTextValue = mLanguages.GetStringTable(mCurrentLanguage).values[keySelected].text;
+			key = mLanguages[keySelected];
+			mReferenceTextValue = mLanguages[mCurrentReferenceLanguage].values[keySelected].text;
+			mTextValue = mLanguages[mCurrentLanguage].values[keySelected].text;
 		}
 
 		GUILayout.BeginHorizontal();
@@ -342,10 +342,10 @@ public class StringTableEditorWindow : EditorWindow {
 
 			//get the mLanguages Object
 			//get the keys
-			for(int i = 0; i < mLanguages.keys.Count; ++i) 
+			for(int i = 0; i < mLanguages.Count; ++i) 
 			{
-				string key = mLanguages.keys[i];
-				string value = mLanguages.GetStringTable(mCurrentLanguage).values[i].text;
+				string key = mLanguages[i];
+				string value = mLanguages[mCurrentLanguage].values[i].text;
 
 				//for each key, create an entry
 				POCreator.POEntry(key, key, value);
@@ -440,7 +440,7 @@ public class StringTableEditorWindow : EditorWindow {
 		{
 			selectedAsset = Selection.activeObject as M10NStringDatabase;
 			if(keySelected >= 0 && mLanguages != null) {
-				focusKey = mLanguages.keys[keySelected];
+				focusKey = mLanguages[keySelected];
 			}
 		}
 
