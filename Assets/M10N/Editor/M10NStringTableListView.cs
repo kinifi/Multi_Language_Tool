@@ -148,10 +148,7 @@ public class M10NStringTableDataSource : TreeViewDataSource
 public class M10NStringTableListViewGUI : TreeViewGUI
 {
 	readonly float column1Width = 0f;
-	readonly Texture2D k_VisibleON = EditorGUIUtility.FindTexture ("VisibilityOn");
 
-	//public Action<M10NStringTableListViewNode, bool> NodeWasToggled;
-	//public AudioMixerController m_Controller = null;
 	public M10NStringDatabase m_db;
 	public SystemLanguage currentEditingLanguage;
 
@@ -163,26 +160,6 @@ public class M10NStringTableListViewGUI : TreeViewGUI
 		k_IconWidth = 0;
 		k_TopRowMargin = k_BottomRowMargin = 2f;
 	}
-
-//	void OpenGroupContextMenu (M10NStringTableListViewNode audioNode, bool visible)
-//	{
-//		GenericMenu menu = new GenericMenu ();
-//
-//		if (NodeWasToggled != null)
-//		{
-//			menu.AddItem (new GUIContent (visible ? "Hide group" : "Show Group"), false, () => NodeWasToggled (audioNode, !visible));
-//		}
-//		menu.AddSeparator (string.Empty);
-//
-//		AudioMixerGroupController[] groups;
-//		if (m_Controller.CachedSelection.Contains (audioNode.group))
-//			groups = m_Controller.CachedSelection.ToArray ();
-//		else
-//			groups = new AudioMixerGroupController[] { audioNode.group };
-//		
-//		AudioMixerColorCodes.AddColorItemsToGenericMenu (menu, groups);
-//		menu.ShowAsContext ();
-//	}
 
 	protected override void DrawIconAndLabel (Rect rect, TreeViewItem item, string label, bool selected, bool focused, bool useBoldFont, bool isPinging)
 	{
@@ -201,23 +178,6 @@ public class M10NStringTableListViewGUI : TreeViewGUI
 		}
 	}
 
-//	override public void OnRowGUI (Rect rowRect, TreeViewItem node, int row, bool selected, bool focused)
-//	{
-//		Event evt = Event.current;
-//		DoItemGUI(rowRect, row, node, selected, focused, false);
-//	}
-//
-//	protected override Texture GetIconForItem(TreeViewItem node)
-//	{
-//		if (node != null && node.icon != null)
-//			return node.icon;
-//		return null;
-//	}
-
-//	protected override void SyncFakeItem()
-//	{
-//	}
-
 	protected override void RenameEnded()
 	{
 		bool userAccepted = GetRenameOverlay().userAcceptedRename;
@@ -230,37 +190,12 @@ public class M10NStringTableListViewGUI : TreeViewGUI
 			{
 				Assert.IsNotNull(m_db);
 				m_db[instanceID] = name;
-//				ObjectNames.SetNameSmartWithInstanceID(instanceID, name);
-//				foreach (var effect in audioNode.group.effects)
-//					effect.ClearCachedDisplayName ();
 				m_TreeView.ReloadData();
-//				if (m_Controller != null)
-//					m_Controller.OnSubAssetChanged ();
 			}
 		}
 	}
 }
 
-
-// TreeView
-
-//public class M10NStringTablePopupContext
-//{
-//	public M10NStringTablePopupContext(AudioMixerController controller, AudioMixerGroupController group)
-//	{
-//		this.controller = controller;
-//		this.groups = new AudioMixerGroupController[] { group };
-//	}
-//
-//	public M10NStringTablePopupContext(AudioMixerController controller, AudioMixerGroupController[] groups)
-//	{
-//		this.controller = controller;
-//		this.groups = groups;
-//	}
-//
-//	public AudioMixerController controller;
-//	public AudioMixerGroupController[] groups;
-//}
 
 public class M10NStringTableListView
 {
@@ -271,7 +206,7 @@ public class M10NStringTableListView
 	private TreeView m_StringTableTree;
 	private int m_TreeViewKeyboardControlID;
 	private M10NStringTableListViewGUI m_StringTableListViewGUI;
-	private int m_ScrollToItem;
+//	private int m_ScrollToItem;
 
 	class Styles
 	{
@@ -291,16 +226,12 @@ public class M10NStringTableListView
 		m_StringTableTree = new TreeView(editorWindow, m_StringTableTreeState);
 		m_StringTableTree.deselectOnUnhandledMouseDown = false;
 		m_StringTableTree.selectionChangedCallback += OnTreeSelectionChanged;
-//		m_StringTableTree.contextClickItemCallback += OnTreeViewContextClick;
-//		m_StringTableTree.expandedStateChanged += SaveExpandedState;
-		
+
 		m_StringTableListViewGUI = new M10NStringTableListViewGUI(m_StringTableTree, m_db);
-//		m_StringTableListViewGUI.NodeWasToggled += OnNodeToggled;
 
 		m_StringTableDataSource = new M10NStringTableDataSource(m_StringTableTree, m_db);
 		m_StringTableTree.Init(editorWindow.position,
 			m_StringTableDataSource, m_StringTableListViewGUI,
-			//new AudioGroupTreeViewDragging(m_AudioGroupTree, this)
 			null // no dragging allowed
 			);
 		m_StringTableDataSource.showRootItem = false;
@@ -320,11 +251,6 @@ public class M10NStringTableListView
 	public void ReloadTree()
 	{
 		m_StringTableTree.ReloadData();
-//		if (m_Controller != null)
-//		{
-//			m_Controller.SanitizeGroupViews ();
-//			m_Controller.OnSubAssetChanged ();
-//		}
 	}
 
 	public void SelectItemForKey(string key) {
@@ -341,27 +267,6 @@ public class M10NStringTableListView
 			m_StringTableTree.NotifyListenersThatSelectionChanged();
 		}
 	}
-
-//	public void AddChildGroupPopupCallback(object obj)
-//	{
-//		AudioMixerGroupPopupContext context = (AudioMixerGroupPopupContext)obj;
-//		if (context.groups != null && context.groups.Length > 0)
-//			AddAudioMixerGroup(context.groups[0]);
-//	}
-
-//	public void AddSiblingGroupPopupCallback (object obj)
-//	{
-//		AudioMixerGroupPopupContext context = (AudioMixerGroupPopupContext)obj;
-//		if (context.groups != null && context.groups.Length > 0)
-//		{
-//			var item = m_AudioGroupTree.FindItem (context.groups[0].GetInstanceID ()) as M10NStringTableListViewNode;
-//			if (item != null)
-//			{
-//				var parent = item.parent as M10NStringTableListViewNode;
-//				AddAudioMixerGroup (parent.group);
-//			}
-//		}
-//	}
 
 	public void AddStringTableEntity ()
 	{
@@ -530,9 +435,9 @@ public class M10NStringTableListView
 //		var groups = GetAudioMixerGroupsFromNodeIDs(selection);
 //		Selection.objects = groups.ToArray ();
 //		m_Controller.OnUnitySelectionChanged ();
-		if(selection.Length == 1) {
-			m_ScrollToItem = selection[0];
-		}
+//		if(selection.Length == 1) {
+//			m_ScrollToItem = selection[0];
+//		}
 
 		m_editorWindow.OnStringTableSelectionChanged(selection);
 
@@ -563,8 +468,8 @@ public class M10NStringTableListView
 	{
 		int treeViewKeyboardControlID = GUIUtility.GetControlID (FocusType.Keyboard);
 
-		m_ScrollToItem = 0;
-
+//		m_ScrollToItem = 0;
+//
 		if (s_Styles == null)
 			s_Styles = new Styles();
 
@@ -639,7 +544,7 @@ public class M10NStringTableListView
 			int[] selection = m_StringTableTree.GetSelection();
 			if (selection.Length > 0)
 			{
-				M10NStringTableListViewNode node = m_StringTableTree.FindItem(selection[0]) as M10NStringTableListViewNode;
+//				M10NStringTableListViewNode node = m_StringTableTree.FindItem(selection[0]) as M10NStringTableListViewNode;
 //				bool shown = m_Controller.CurrentViewContainsGroup (node.group.groupID);
 //				OnNodeToggled(node, !shown);
 				evt.Use();

@@ -10,11 +10,6 @@ public class M10NStringDatabaseEditor : Editor
 
     public override void OnInspectorGUI()
     {
-
-        M10NStringDatabase db = target as M10NStringDatabase;
-        
-        
-        
         showDebugData = EditorGUILayout.Toggle("Show Debug Data", showDebugData);
 
         if(showDebugData == true)

@@ -20,7 +20,7 @@ namespace UnityEditor
 		bool m_ChangeWasAdd = false;
 		bool m_IgnoreNextAssetLabelsChangedCall = false;
 
-		private static int s_MaxShownLabels = 10;
+//		private static int s_MaxShownLabels = 10;
 
 		public Action<int, string> selectionChangedDelegate;
 
@@ -124,14 +124,14 @@ namespace UnityEditor
 			// The previous layouting means we've already lost a pixel to the left and couple at the top, so it is an attempt at horizontal padding: 3, verical padding: 5
 			// (the rounded sides of labels makes this look like the horizontal and vertical padding is the same)
 			float leftPadding = 1.0f;
-			float rightPadding = 2.0f;
+//			float rightPadding = 2.0f;
 			float topPadding = 3.0f;
 			float bottomPadding = 5.0f;
 			
 //			GUIStyle labelButton = EditorStyles.assetLabelIcon;
 			GUIStyle labelButton = EditorStyles.boldLabel;
 			
-			float buttonWidth = labelButton.margin.left + labelButton.fixedWidth + rightPadding;
+//			float buttonWidth = labelButton.margin.left + labelButton.fixedWidth + rightPadding;
 			
 			// Assumes we are already in a vertical layout
 			GUILayout.Space (topPadding);

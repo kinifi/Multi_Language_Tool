@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Collections;
+using UnityEditor.SceneManagement;
 
 public class BeautyShot : MonoBehaviour
 {
@@ -50,7 +51,7 @@ public class BeautyShot : MonoBehaviour
 		Time.captureFramerate = frameRate;
 		numFrames = duration * frameRate;
 
-		var sceneName = System.IO.Path.GetFileNameWithoutExtension( EditorApplication.currentScene );
+		var sceneName = System.IO.Path.GetFileNameWithoutExtension( EditorSceneManager.GetActiveScene().name );
 		var path = "BeautyShots/{0}/{1}";
 
 		//	"640 k ought to be enough for anybody."

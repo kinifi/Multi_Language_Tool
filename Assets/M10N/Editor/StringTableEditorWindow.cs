@@ -17,12 +17,10 @@ public class StringTableEditorWindow : EditorWindow {
 
 	//new language key and values to edit
 	private string m_NewLanguageKey;
-	private string m_NewLanguageValue;
+//	private string m_NewLanguageValue;
 
 	private SystemLanguage[] loadedLanguages;
 	private string[] loadedLanguagesString;
-
-	private Vector2 mScroll;
 
 	private string mReferenceTextValue;
 	private string mTextValue;
@@ -117,11 +115,9 @@ public class StringTableEditorWindow : EditorWindow {
 		mCurrentLanguage = EditorSettings.editorPreviewLanguage;
 
 		m_NewLanguageKey = string.Empty;
-		m_NewLanguageValue = string.Empty;
+//		m_NewLanguageValue = string.Empty;
 		loadedLanguages = null;
 		loadedLanguagesString = null;
-
-		mScroll = Vector2.zero;
 
 		mReferenceTextValue = string.Empty;
 		mTextValue = string.Empty;

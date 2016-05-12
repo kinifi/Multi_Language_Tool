@@ -69,6 +69,12 @@ public struct M10NStringReference {
 		}
 	}
 
+	public string selectedKey {
+		get {
+			return m_selectedKey;
+		}
+	}
+
 	public void SetArgs(params object[] args) {
 		this.args = args;
 	}
