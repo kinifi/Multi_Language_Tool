@@ -16,7 +16,7 @@ MonoBehaviour:
   - playbutton
   - score
   - gameover
-  - pauseText
+  - pausetext
   - quit
   - resume
   - soundtext
