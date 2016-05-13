@@ -23,6 +23,7 @@ public class StringTableEditorWindow : EditorWindow {
 
 	private int keySelected;
 	private bool mShowReference;
+	private bool mShowComment;
 
 	private int newKeyIncrementer;
 
@@ -146,17 +147,21 @@ public class StringTableEditorWindow : EditorWindow {
 			DoLanguageMenuBar(menubarRect);
 
 			// Do layouting
-			SplitterGUILayout.BeginHorizontalSplit(mHorizontalSplitterState, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-			GUILayout.BeginVertical ();
+			if( mShowComment ) {
+				SplitterGUILayout.BeginHorizontalSplit(mHorizontalSplitterState, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+				GUILayout.BeginVertical ();
+			}
 			SplitterGUILayout.BeginVerticalSplit(mVerticalSplitterState, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 			GUILayout.BeginHorizontal ();
 			GUILayout.EndHorizontal ();
 			SplitterGUILayout.EndVerticalSplit();
-			GUILayout.EndVertical ();
-			SplitterGUILayout.EndHorizontalSplit();
+			if( mShowComment ) {
+				GUILayout.EndVertical ();
+				SplitterGUILayout.EndHorizontalSplit();
+			}
 
 			// do split here
-			int editorWidth = (int)mHorizontalSplitterState.realSizes[0];
+			int editorWidth = (mShowComment) ? (int)mHorizontalSplitterState.realSizes[0] : (int)position.width;
 			int commentWidth = (int)mHorizontalSplitterState.realSizes[1];
 
 			int listViewHeight = (int)mVerticalSplitterState.realSizes[0];
@@ -177,7 +182,9 @@ public class StringTableEditorWindow : EditorWindow {
 			DoLanguageKeyValueEditor(leftPaneRect_editorview);
 
 			//display edit field
-			DoRightSideView(rightPaneRect);
+			if( mShowComment ) {
+				DoRightSideView(rightPaneRect);
+			}
 
 			//remove notification if we were displaying one
 			RemoveNotification();
@@ -309,9 +316,10 @@ public class StringTableEditorWindow : EditorWindow {
 
 		//select the language you want to display
 		DoReferenceLanguagePopup();
-		//Debug.Log(currentLoadedLanguageListSelection);
 
 		GUILayout.FlexibleSpace();
+
+		DoShowCommentButton();
 
 		DoContextMenuButton();
 
@@ -430,6 +438,10 @@ public class StringTableEditorWindow : EditorWindow {
 		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup, GUILayout.Width(100));
 		mCurrentLanguage = loadedLanguages[selectionIndex];
 		m_StringTableListView.OnEditingLanguageChanged(mCurrentLanguage);
+	}
+
+	public void DoShowCommentButton() {
+		mShowComment = GUILayout.Toggle(mShowComment, new GUIContent("Comment"), EditorStyles.toolbarButton, GUILayout.Width(60));
 	}
 
 	public void DoReferenceLanguagePopup()
