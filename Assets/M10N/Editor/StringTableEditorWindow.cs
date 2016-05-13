@@ -15,10 +15,6 @@ public class StringTableEditorWindow : EditorWindow {
 	public SystemLanguage mCurrentLanguage;
 	public SystemLanguage mCurrentReferenceLanguage;
 
-	//new language key and values to edit
-	private string m_NewLanguageKey;
-//	private string m_NewLanguageValue;
-
 	private SystemLanguage[] loadedLanguages;
 	private string[] loadedLanguagesString;
 
@@ -26,6 +22,9 @@ public class StringTableEditorWindow : EditorWindow {
 	private string mTextValue;
 
 	private int keySelected;
+	private bool mShowReference;
+
+	private int newKeyIncrementer;
 
 	private SplitterState mHorizontalSplitterState;
 	private SplitterState mVerticalSplitterState;
@@ -112,8 +111,6 @@ public class StringTableEditorWindow : EditorWindow {
 
 		mCurrentLanguage = EditorSettings.editorPreviewLanguage;
 
-		m_NewLanguageKey = string.Empty;
-//		m_NewLanguageValue = string.Empty;
 		loadedLanguages = null;
 		loadedLanguagesString = null;
 
@@ -188,7 +185,7 @@ public class StringTableEditorWindow : EditorWindow {
 		else
 		{
 			//the language is not loaded
-			ShowNotification(new GUIContent(EditorGUILayout.TextField("Select A Language To Edit"))); 
+			ShowNotification(new GUIContent("Select A Language To Edit")); 
 		}
 
 		GUILayout.EndArea();
@@ -221,9 +218,24 @@ public class StringTableEditorWindow : EditorWindow {
 	{
 		Assert.IsNotNull(mLanguages);
 
+		Rect buttonAddRect = paneRectSize;
+
+		buttonAddRect.height = 20;
+		paneRectSize.yMin += buttonAddRect.height; 
+
+		//EditorGUI.DrawRect(buttonAddRect, Color.blue);
+
+		GUILayout.BeginArea(buttonAddRect);
+		GUILayout.Space(2);
+		DoAddKey();
+		GUILayout.EndArea();
+
+		buttonAddRect.height = 1.0f;
+		EditorGUI.DrawRect(buttonAddRect, Color.gray);
+
 		GUILayout.BeginArea(paneRectSize, EditorStyles.helpBox);
 
-		GUILayout.Space(20);
+		GUILayout.Space(2);
 
 		string key = string.Empty;
 		bool isValidKeySelected = mLanguages.Count > keySelected && keySelected >= 0;
@@ -234,36 +246,32 @@ public class StringTableEditorWindow : EditorWindow {
 		}
 
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("Key:");
+		GUILayout.Label("Key", EditorStyles.boldLabel);
 		GUI.changed = false;
 		string newKey = EditorGUILayout.TextField(key);
 		if(GUI.changed) {
 			mLanguages.RenameTextEntryKey(key, newKey);
-			m_StringTableListView.ReloadTree ();
-			EditorUtility.SetDirty(mLanguages);
+			SetDatabaseDirty();
 		}
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginVertical();
-		GUILayout.Label("Reference Text", EditorStyles.boldLabel);
 
-		using (new EditorGUI.DisabledScope(true)) {
-			mReferenceTextValue = EditorGUILayout.TextArea(mReferenceTextValue, GUILayout.Height(80));
+		if( mShowReference ) {
+			GUILayout.Label("Reference Text", EditorStyles.boldLabel);
+
+			using (new EditorGUI.DisabledScope(true)) {
+				mReferenceTextValue = EditorGUILayout.TextArea(mReferenceTextValue, GUILayout.Height(40));
+			}
 		}
 
 		GUILayout.Label("Text", EditorStyles.boldLabel);
 
 		GUI.changed = false;
-		mTextValue = EditorGUILayout.TextArea(mTextValue, GUILayout.Height(80));
+		mTextValue = EditorGUILayout.TextArea(mTextValue, GUILayout.Height(60));
 		if(GUI.changed) {
 			mLanguages.SetTextEntry(mCurrentLanguage, key, mTextValue);
-			m_StringTableListView.ReloadTree ();
-			InspectorWindow.RepaintAllInspectors();
-			M10NText[] texts = FindObjectsOfType(typeof(M10NText)) as M10NText[];
-			foreach(M10NText t in texts) {
-				t.SetVerticesDirty();
-			}
-			EditorUtility.SetDirty(mLanguages);
+			SetDatabaseDirty();
 		}
 			
 		GUILayout.EndVertical();
@@ -271,6 +279,21 @@ public class StringTableEditorWindow : EditorWindow {
 		EditorGUILayout.Space();
 
 		GUILayout.EndArea();
+	}
+
+	private void SetDatabaseDirty() {
+
+		EditorUtility.SetDirty(mLanguages);
+
+		if(m_StringTableListView != null) {
+			m_StringTableListView.ReloadTree ();
+		}
+
+		InspectorWindow.RepaintAllInspectors();
+		M10NText[] texts = FindObjectsOfType(typeof(M10NText)) as M10NText[];
+		foreach(M10NText t in texts) {
+			t.SetVerticesDirty();
+		}
 	}
 
 	//create the top menu bar
@@ -288,87 +311,95 @@ public class StringTableEditorWindow : EditorWindow {
 		DoReferenceLanguagePopup();
 		//Debug.Log(currentLoadedLanguageListSelection);
 
-		EditorGUILayout.Space();
+		GUILayout.FlexibleSpace();
 
-		//display the add key button in the toolbar
-		DoAddKey();
-
-		//export the selected language
-		DoExportLanguageFileButton();
-		//import the selected po file 
-		DoImportLanguageFileButton();
+		DoContextMenuButton();
 
 		GUILayout.EndHorizontal();
 
 		GUILayout.EndArea();
 	}
 
-	public void DoAddKey()
+	private void DoAddKey()
 	{
-		
-		m_NewLanguageKey = EditorGUILayout.TextField("Key Name: ", m_NewLanguageKey, EditorStyles.toolbarTextField, GUILayout.Width(300));
+		GUILayout.BeginHorizontal();
 
-		if(GUILayout.Button("Add New Key", EditorStyles.toolbarButton, GUILayout.Width(80)))
+		if(GUILayout.Button(" ", "OL Plus", GUILayout.Width(80)))
 		{
-			//start exporting language File here
-			mLanguages.AddTextEntry(m_NewLanguageKey.ToLower());
-			m_StringTableListView.ReloadTree ();
-			EditorUtility.SetDirty(mLanguages);
+			string newKeyName = "new_key_" + (++newKeyIncrementer);
 
-			//clear the text box
-			m_NewLanguageKey = "";
-		}
-
-
-
-	}
-
-	public void DoImportLanguageFileButton ()
-	{
-		if(GUILayout.Button("Import", EditorStyles.toolbarButton, GUILayout.Width(50)))
-		{
-			//start parsing the PO File
-			//get the file path
-			var newPath = EditorUtility.OpenFilePanel(
-				"Select PO file",
-				"",
-				"po");
-			if(newPath.Length == 0) {
-				return;
+			while(mLanguages.ContainsKey(newKeyName)) {
+				newKeyName = "new_key_" + (++newKeyIncrementer);
 			}
 
-			//start importing the file
-			M10NPOCreator.ImportFile(mLanguages, newPath, mCurrentReferenceLanguage);
-
-			EditorUtility.SetDirty(mLanguages);
+			//start exporting language File here
+			mLanguages.AddTextEntry(newKeyName);
 			m_StringTableListView.ReloadTree ();
+			m_StringTableListView.SelectItemForKey(newKeyName);
+			EditorUtility.SetDirty(mLanguages);
 		}
 
+		GUILayout.EndHorizontal();
+	}
+
+	private void DoContextMenuButton ()
+	{
+		if(GUILayout.Button("▼", EditorStyles.toolbarButton, GUILayout.Width(20)))
+		{
+			GenericMenu pm = new GenericMenu();
+
+			pm.AddItem(new GUIContent("Import from .po ..."), false, PerformImportLanguageFile);
+
+			if( mShowReference ) {
+				pm.AddItem(new GUIContent("Export to .po ..."), false, PerformExportLanguageFile);
+			} else {
+				pm.AddDisabledItem (new GUIContent("Export to .po ..."));
+				pm.AddSeparator("/");
+				pm.AddDisabledItem (new GUIContent("To export, enable Reference"));
+			}
+
+
+			pm.ShowAsContext();
+		}
+	}
+
+	private void PerformImportLanguageFile ()
+	{
+		//start parsing the PO File
+		//get the file path
+		var newPath = EditorUtility.OpenFilePanel(
+			"Select PO file",
+			"",
+			"po");
+		if(newPath.Length == 0) {
+			return;
+		}
+
+		//start importing the file
+		M10NPOCreator.ImportFile(mLanguages, newPath, mCurrentReferenceLanguage);
+
+		SetDatabaseDirty();
 	}
 
 	//exports the language translations to a .po file
-	public void DoExportLanguageFileButton ()
+	private void PerformExportLanguageFile ()
 	{
-		if(GUILayout.Button("Export", EditorStyles.toolbarButton, GUILayout.Width(50)))
-		{
-			//check if the mLanguages file is null
-			Assert.IsNotNull(mLanguages);
+		//check if the mLanguages file is null
+		Assert.IsNotNull(mLanguages);
 
-			//prompt user to export the file at a location
-			var path = EditorUtility.SaveFilePanel(
-					"Save Language as .po",
-					"",
-					mCurrentLanguage.ToString() + ".po",
-					"po");
-			//check if the file path is zero 
-			if(path.Length == 0) {
-				return;
-			}
-
-			//get the current language selected
-			M10NPOCreator.ExportFile(mLanguages, mCurrentLanguage, mCurrentReferenceLanguage, path);
+		//prompt user to export the file at a location
+		var path = EditorUtility.SaveFilePanel(
+				"Save Language as .po",
+				"",
+				mCurrentLanguage.ToString() + ".po",
+				"po");
+		//check if the file path is zero 
+		if(path.Length == 0) {
+			return;
 		}
 
+		//get the current language selected
+		M10NPOCreator.ExportFile(mLanguages, mCurrentLanguage, mCurrentReferenceLanguage, path);
 	}
 
 	public void DoLanguagePopup()
@@ -403,8 +434,6 @@ public class StringTableEditorWindow : EditorWindow {
 
 	public void DoReferenceLanguagePopup()
 	{
-		GUILayout.Label("Reference:", GUILayout.Width(70));
-
 		if(mLanguages == null)
 		{
 			string[] nodata = {""};
@@ -412,24 +441,19 @@ public class StringTableEditorWindow : EditorWindow {
 			return;
 		}
 
-		if( loadedLanguages == null || loadedLanguages.Length != mLanguages.languageCount ) {
-			loadedLanguages = mLanguages.languages;
-			loadedLanguagesString = new string[loadedLanguages.Length];
+		mShowReference = GUILayout.Toggle(mShowReference, new GUIContent("Reference"), EditorStyles.toolbarButton, GUILayout.Width(60));
+		if( mShowReference ) {
+			int selectionIndex = 0;
 			for(int i = 0; i < loadedLanguages.Length; ++i) {
-				loadedLanguagesString[i] = loadedLanguages[i].ToString();
+				if(loadedLanguages[i] == mCurrentReferenceLanguage) {
+					selectionIndex = i;
+				}
 			}
-		}
 
-		int selectionIndex = 0;
-		for(int i = 0; i < loadedLanguages.Length; ++i) {
-			if(loadedLanguages[i] == mCurrentReferenceLanguage) {
-				selectionIndex = i;
-			}
+			//select the language you want to display
+			selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup, GUILayout.Width(100));
+			mCurrentReferenceLanguage = loadedLanguages[selectionIndex];
 		}
-
-		//select the language you want to display
-		selectionIndex = EditorGUILayout.Popup(selectionIndex, loadedLanguagesString, EditorStyles.toolbarPopup, GUILayout.Width(100));
-		mCurrentReferenceLanguage = loadedLanguages[selectionIndex];
 	}
 
 	public void OnStringTableSelectionChanged(int[] selection) {
