@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 
-[AddComponentMenu("UI/M10N Text", 10)]
+[AddComponentMenu("UI/Text Reference", 10)]
 public class M10NText : UnityEngine.UI.Text
 {
 	[SerializeField]
